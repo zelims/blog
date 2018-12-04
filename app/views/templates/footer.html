@@ -8,4 +8,13 @@
 
   <script src="/public/js/jquery.min.js"></script>
   <script src="/public/js/bootstrap.min.js"></script>
+  <script src="/public/js/github-calendar.min.js"></script>
+
+  {{range .moreScripts}}
+      <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
+  {{end}}
+
+  {{ if eq .active "projects" }}
+      <script> new GitHubCalendar(".calendar", "zelims"); </script>
+  {{ end }}
 </html>

@@ -191,6 +191,35 @@ ul a:focus {
     color: #000;
 }
 
+/** ABOUT **/
+.about-details {
+    margin: 0 auto;
+    text-align: center;
+}
+.about img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+}
+.about ul.social-list {
+    width: 75%;
+    margin: 0 auto;
+}
+.about ul.social-list li {
+    text-align: left;
+    padding: 0.15rem 0;
+}.about ul.social-list i {
+     width: 32px;
+ }
+.about ul.social-list a {
+    color: #444;
+    transition: 0.25s;
+}
+.about ul.social-list a:hover {
+    color: #bbb;
+    border-bottom: 1px solid #aaa;
+}
+
 /** @Repo **/
 
 .repo-row:not(:first-child) {
