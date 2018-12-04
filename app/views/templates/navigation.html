@@ -15,9 +15,9 @@
     <div class="head-nav">
         <span class="menu"> </span>
         <ul class="cl-effect-15">
-            <li class="active"><a href="/">HOME</a></li>
-            <li><a href="/about">ABOUT</a></li>
-            <li><a href="/projects">PROJECTS</a></li>
+            <li {{ if eq .active "home" }} class="active" {{ end }}><a href="/">HOME</a></li>
+            <li {{ if eq .active "about" }} class="active" {{ end }}><a href="/about">ABOUT</a></li>
+            <li {{ if eq .active "projects" }} class="active" {{ end }}><a href="/projects">PROJECTS</a></li>
             <div class="clearfix"> </div>
         </ul>
     </div>

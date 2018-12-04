@@ -1,0 +1,19 @@
+{{ range . }}
+<div class="row post-list">
+    <div class="col-12">
+        <div class="card">
+            <div class="post card-body">
+                <h3 class="post-title"><a href="/post/{{ .ID }}">{{ .Title }}</a></h3>
+                <small class="text-muted">Posted by <b>{{ .Author }}</b> on {{ .Date }}</small>
+                <p><small><i class="fas fa-tags"></i>&nbsp;
+                        {{ range .TagArr }}
+                            <a href="/tag/{{ . }}">{{ . }}</a>
+                        {{ end }}
+                    </small></p>
+                <hr>
+                <p>{{ .Description }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

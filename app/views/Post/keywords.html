@@ -1,0 +1,10 @@
+{{ set . "title" (strcat "Tag Search - " .tag) }}
+{{ set . "active" "" }}
+{{template "templates/header.html" .}}
+{{template "templates/navigation.html" .}}
+
+<div class="page-container">
+    {{ template "templates/posts.html" .post }}
+</div>
+
+{{template "templates/footer.html" .}}

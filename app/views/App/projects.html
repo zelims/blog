@@ -1,0 +1,57 @@
+{{ set . "title" "My Projects" }}
+{{ set . "active" "projects" }}
+{{template "templates/header.html" .}}
+{{template "templates/navigation.html" .}}
+
+<div class="page-container">
+    {{ range .repo }}
+        <div class="row repo-row">
+            <div class="col-sm-12 column-center">
+                <article class="repo">
+                    <header class="repo-header">
+                        <div class="float-left">
+                            <a class="repo-title" href="http://github.com/zelims/{{ .Name }}">{{ .Name }}</a>
+                        </div>
+                        <div class="float-right">
+                            <span class="repo-language">{{ .Language }}</span>
+                        </div>
+                    </header>
+                    <div class="clearfix"></div>
+                    <div class="repo-meta">
+                        Last Update: {{ .LastUpdate }}
+                    </div>
+                    <div class="repo-data">
+                        <p>{{ .Description }}</p>
+                    </div>
+                    <div class="repo-footer">
+                        <p> {{ .Forks }} Forks | {{ .Stars }} Stars |
+                            {{ .Watchers }} Watchers | {{ .OpenIssues }} Open Issues
+                            {{ if .README }}
+                                | <a class="repo-readme-link" data-toggle="modal" data-target="#{{.Name}}_Modal">View README</a>
+                            {{ end }}
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </div>
+        {{ if .README }}
+            <div class="modal fade" id="{{.Name}}_Modal">
+                <div class="modal-dialog" role="document">
+                    <div class="readme-modal-content modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ .Name }} README</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p>{{ .README_DATA }}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary readme-modal-btn" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{ end }}
+    {{ end }}
+</div>
+
+{{template "templates/footer.html" .}}

@@ -1,0 +1,20 @@
+{{ set . "title" .post.Title }}
+{{ set . "active" "" }}
+{{template "templates/header.html" .}}
+{{template "templates/navigation.html" .}}
+
+
+<div class="page-container">
+    <div class="row">
+        <div class="col-12">
+            <h3>{{ .post.Title }}</h3>
+            <small class="text-muted">By <b>{{ .post.Author }}</b> on {{ .post.Date }}</small>
+            <hr>
+            <div class="p-2">
+                {{ .post.Content }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{template "templates/footer.html" .}}

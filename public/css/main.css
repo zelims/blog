@@ -1,3 +1,14 @@
+html {
+    height: 100vh;
+}
+body {
+    font-family: Roboto sans-serif;
+    font-size: 0.95rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 #banner {
     position: absolute;
     top: 0;
@@ -63,7 +74,8 @@
 
 /** LINKS **/
 .head-nav {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    padding: 1em 0;
 }
 .head-nav ul li{
     display: inline-block;
@@ -138,6 +150,131 @@ ul a:focus {
     transform: scale(0.9);
     opacity: 0;
 }
-.head-nav {
-    padding: 1em 0;
+
+/* Container Styles */
+.page-container {
+    width:100%;
+    padding-right:30px;
+    padding-left:30px;
+    margin-right:auto;
+    margin-left:auto;
+    height: auto;
+    position: relative;
+    flex: 1;
+}
+@media (min-width:576px) {
+    .page-container {
+        max-width:540px
+    }
+}
+@media (min-width:768px) {
+    .page-container {
+        max-width:720px
+    }
+}
+@media (min-width:992px) {
+    .page-container {
+        max-width:960px
+    }
+}
+@media (min-width:1200px) {
+    .page-container {
+        max-width:1140px
+    }
+}
+
+/* POST */
+.post-list {
+    margin-bottom: 1.25rem;
+}
+.post a {
+    color: #000;
+}
+
+/** @Repo **/
+
+.repo-row:not(:first-child) {
+    margin-top: 1.5rem;
+}
+
+.repo {
+    width: 80%;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #eee;
+    box-shadow: 2px 2px 10px #999;
+}
+
+.repo header.repo-header .repo-language {
+    line-height: 2.2em;
+}
+
+.repo header.repo-header {
+    padding: 20px 20px 0;
+}
+
+.repo header.repo-header a.repo-title {
+    text-decoration: none;
+    font-size: 2em;
+    font-weight: bold;
+    color: #555;
+    line-height: 1.1em;
+    text-align: center;
+    vertical-align: middle;
+}
+.repo header.repo-header a.repo-title:hover {
+    color: #888;
+}
+
+.repo .repo-meta {
+    font-size: 12px;
+    margin-top: 0.5rem;
+    padding: 0 20px;
+    color: #999;
+}
+
+.repo .repo-data {
+    color: #555;
+    padding: 10px 20px;
+}
+.repo .repo-data p {
+    margin-top: 1rem!important;
+    margin-bottom: 1rem;
+}
+
+.repo .repo-footer {
+    margin: 0 20px;
+    padding-top: 10px;
+    font-size: 0.8em;
+    color: #999;
+    border-top: 1px solid #ccc;
+    z-index: 999;
+}
+
+.repo .repo-readme-link {
+    display: inline;
+    color: #555!important;
+}
+.repo .repo-readme-link:hover {
+    color: #08f!important;
+    cursor: pointer;
+}
+
+/* README Modal on Projects Page */
+.readme-modal-content {
+    font-size: 0.8em;
+}
+.readme-modal-btn {
+    cursor: pointer;
+    background-color: #08f!important;
+    color: #fff!important;
+}
+
+/* Footer */
+footer {
+    background: #2d2b2e;
+    height: 70px;
+    color: #fff;
+    line-height: 70px;
+    text-align: center;
 }

@@ -1,7 +1,11 @@
 package app
 
 import (
+	"database/sql"
 	"github.com/revel/revel"
+	_ "github.com/go-sql-driver/mysql"
+	"log"
+	"strings"
 )
 
 var (
@@ -11,6 +15,26 @@ var (
 	// BuildTime revel app build-time (ldflags)
 	BuildTime string
 )
+
+var DB *sql.DB
+
+func initDB() {
+	driver := revel.Config.StringDefault("db.driver", "mysql")
+	connectString := revel.Config.StringDefault("db.connect", "root:@(localhost:3306)/blog")
+
+	db, err := sql.Open(driver, connectString)
+	if err != nil {
+		log.Fatal("[!] DB Err: ", err)
+	}
+
+	DB = db
+}
+
+func setupTemplateFuncs() {
+	revel.TemplateFuncs["strcat"] = func(strs ...string) string {
+		return strings.Trim(strings.Join(strs, ""), " ")
+	}
+}
 
 func init() {
 	// Filters is the default set of global filters.
@@ -36,6 +60,9 @@ func init() {
 	// revel.OnAppStart(ExampleStartupScript)
 	// revel.OnAppStart(InitDB)
 	// revel.OnAppStart(FillCache)
+
+	revel.OnAppStart(initDB)
+	revel.OnAppStart(setupTemplateFuncs)
 }
 
 // HeaderFilter adds common security headers

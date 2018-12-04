@@ -1,0 +1,10 @@
+{{ set . "title" "Home" }}
+{{ set . "active" "home" }}
+{{template "templates/header.html" .}}
+{{template "templates/navigation.html" .}}
+
+<div class="page-container">
+  {{ template "templates/posts.html" .posts }}
+</div>
+
+{{template "templates/footer.html" .}}
