@@ -6,14 +6,16 @@ import (
 	"github.com/russross/blackfriday"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"sort"
 	"time"
 )
 
 const _GITHUB_USER = "zelims" // github username for repos
 
 // struct for storing repo data
-type _repositoryData struct {
+type RepositoryData struct {
 	Name 			string			`json:"name"`				// name of repository
 	Description 	string			`json:"description"`		// description of repo
 	LastUpdate 		string			`json:"updated_at"`			// total number of commits
@@ -30,12 +32,14 @@ type _repositoryData struct {
 	README_DATA    	template.HTML	`content:"README_DATA"`		// only set if above = true, contains README
 }
 
+type repoData []RepositoryData
+
 /*****************************************************
  * GetAll (repositories)
  * @desc gets all public repositories from user
- * @return []_repositoryData: array of repoData
+ * @return []RepositoryData: array of repoData
  *****************************************************/
-func Repositories() []_repositoryData {
+func Repositories() []RepositoryData {
 	// uses GitHub API to get JSON data of repos
 	res, err := http.Get("https://api.github.com/users/" + _GITHUB_USER + "/repos")
 	if err != nil {
@@ -48,8 +52,9 @@ func Repositories() []_repositoryData {
 		panic(err.Error())
 	}
 
+	rData := new(repoData)
+
 	// creates an array of repoData
-	rData := new([]_repositoryData)
 	err = json.Unmarshal(body, &rData) // sets the resp of repos to the above array
 	if err != nil {
 		fmt.Println("unmarshal error:", err)
@@ -59,7 +64,7 @@ func Repositories() []_repositoryData {
 	for m, _ := range *rData {
 		// update time
 		t, _ := time.Parse(time.RFC3339, (*rData)[m].LastUpdate)
-		(*rData)[m].LastUpdate = time.Unix(t.Unix(), 0).Format("02 Jan 2006 15:04 MST")
+		(*rData)[m].LastUpdate = time.Unix(t.Unix(), 0).Format("02 Jan 2006")
 
 		// check if README exists
 		data, _ := http.Get("https://raw.githubusercontent.com/" + _GITHUB_USER + "/" + (*rData)[m].Name + "/master/README.md")
@@ -71,6 +76,21 @@ func Repositories() []_repositoryData {
 			(*rData)[m].README_DATA = template.HTML(string(blackfriday.MarkdownCommon([]byte(body))))
 		}
 	}
-
+	sort.Sort(*rData)
 	return *rData // return the pointer of the struct map
+}
+
+func (p repoData) Len() int {
+	return len(p)
+}
+
+func (p repoData) Less(i, j int) bool {
+	t1, _ := time.Parse("02 Jan 2006", p[i].LastUpdate)
+	t2, _ := time.Parse("02 Jan 2006", p[j].LastUpdate)
+	log.Printf("Checking if %s is before %s", p[i].LastUpdate, p[j].LastUpdate)
+	return t1.After(t2)
+}
+
+func (p repoData) Swap(i, j int) {
+	p[i], p[j] = p[j], p[i]
 }

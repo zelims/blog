@@ -11,8 +11,15 @@
             <small class="text-muted">By <b>{{ .post.Author }}</b> on {{ .post.Date }}</small>
             <hr>
             <div class="p-2">
-                {{ .post.Content }}
+                {{ md .post.Content }}
             </div>
+            <hr>
+            <p><small><i class="fas fa-tags"></i>&nbsp;
+                    {{ range $index, $tag := .post.TagArr }}
+                        {{if $index}},{{end}}
+                        <a href="/tag/{{ $tag }}">{{ $tag }}</a>
+                    {{ end }}
+                </small></p>
         </div>
     </div>
 </div>

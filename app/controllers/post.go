@@ -1,13 +1,12 @@
 package controllers
 
 import (
+	"database/sql"
 	"github.com/revel/revel"
 	"github.com/zelims/blog/app"
 	"github.com/zelims/blog/app/models"
-	"html/template"
 	"log"
 	"strconv"
-	"strings"
 )
 
 type Post struct {
@@ -35,33 +34,14 @@ func (c Post) Keywords(tag string) revel.Result {
 
 }
 
-
-
-
 func (c Post) getPostsByTag(tag string) []*models.Post {
-	posts := make([]*models.Post, 0)
 	query, err := app.DB.Query("SELECT * FROM `posts` WHERE FIND_IN_SET(?, `tags`)", tag)
 	if err != nil {
 		c.Log.Error("Query Error: %s", err.Error())
 		return nil
 	}
-	for query.Next() {
-		curPost := &models.Post{}
-		contentStr := ""
-		if err = query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &contentStr,
-			&curPost.Tags, &curPost.Date); err != nil {
-			log.Printf("[!] Error scanning to post: %s", err.Error())
-		}
 
-		curPost.Tags = strings.ToLower(strings.Replace(curPost.Tags, ",", " ", -1))
-		curPost.TagArr = strings.Split(curPost.Tags, " ") // creates the keyword array
-
-		curPost.Description = template.HTML(contentStr[:500])
-		curPost.Content = template.HTML(contentStr)
-		curPost.FormatDate()
-		posts = append(posts, curPost)
-	}
-	return posts
+	return c.getPostData(query)
 }
 
 func (c Post) getPostByID(id int) *models.Post {
@@ -72,13 +52,25 @@ func (c Post) getPostByID(id int) *models.Post {
 	}
 	curPost := &models.Post{}
 	for query.Next() {
-		contentStr := ""
-		if err = query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &contentStr,
+		if err = query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
 			&curPost.Tags, &curPost.Date); err != nil {
 			log.Printf("[!] Error scanning to post: %s", err.Error())
 		}
-		curPost.Content = template.HTML(contentStr)
-		curPost.FormatDate()
+		curPost.Format()
 	}
 	return curPost
+}
+
+func (c Post) getPostData(query *sql.Rows) []*models.Post {
+	posts := make([]*models.Post, 0)
+	for query.Next() {
+		curPost := &models.Post{}
+		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
+			&curPost.Tags, &curPost.Date); err != nil {
+			log.Printf("[!] Error scanning to post: %s", err.Error())
+		}
+		curPost.Format()
+		posts = append(posts, curPost)
+	}
+	return posts
 }

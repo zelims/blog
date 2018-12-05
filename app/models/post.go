@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/zelims/blog/app"
-	"html/template"
 	"log"
 	"strconv"
 	"strings"
@@ -13,8 +12,8 @@ type Post struct {
 	ID					int
 	Author				string
 	Title				string
-	Description			template.HTML
-	Content				template.HTML
+	Description			string
+	Content				string
 	Tags				string
 	TagArr 				[]string
 	Date				string
@@ -29,31 +28,37 @@ func GetPosts() []*Post {
 	}
 	for query.Next() {
 		curPost := &Post{}
-		contentStr := ""
-		if err = query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &contentStr,
+		if err = query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
 			&curPost.Tags, &curPost.Date); err != nil {
 			log.Printf("[!] Error scanning to post: %s", err.Error())
 		}
-
-		curPost.Tags = strings.ToLower(strings.Replace(curPost.Tags, ",", " ", -1))
-		curPost.TagArr = strings.Split(curPost.Tags, " ") // creates the keyword array
-
-		curPost.Description = template.HTML(contentStr[:500])
-		curPost.Content = template.HTML(contentStr)
-		curPost.FormatDate()
+		curPost.Format()
 		allPosts = append(allPosts, curPost)
 	}
 	return allPosts
 }
 
-func GetPost(id int) *Post {
-
-	curPost := &Post{}
-	return curPost
+func (p *Post) Format() {
+	p.formatDate()
+	p.formatTags()
+	p.formatContent()
 }
-func (p *Post) FormatDate() {
+func (p *Post) formatDate() {
 	// starts a conversion string for UNIX --> RFC1123
 	convStr, _ := strconv.ParseInt(p.Date, 10, 64)
 	// setting the data from the convStr to the proper format
 	p.Date = time.Unix(convStr, 0).Format("2 Jan 2006 at 3:04pm MST") //time.RFC1123
+}
+
+func (p *Post) formatTags() {
+	p.Tags = strings.ToLower(strings.Replace(p.Tags, ",", " ", -1))
+	p.TagArr = strings.Split(p.Tags, " ") // creates the keyword array
+
+}
+
+func (p *Post) formatContent() {
+	p.Description = p.Content
+	if len(p.Content) > 500 {
+		p.Description = p.Content[:500]
+	}
 }

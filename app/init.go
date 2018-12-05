@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"github.com/revel/revel"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/russross/blackfriday"
+	"html/template"
 	"log"
 	"strings"
 )
@@ -33,6 +35,13 @@ func initDB() {
 func setupTemplateFuncs() {
 	revel.TemplateFuncs["strcat"] = func(strs ...string) string {
 		return strings.Trim(strings.Join(strs, ""), " ")
+	}
+
+	revel.TemplateFuncs["md"] = func(str string) template.HTML {
+		return template.HTML(string(blackfriday.MarkdownCommon([]byte(str))))
+	}
+	revel.TemplateFuncs["html"] = func(str string) template.HTML {
+		return template.HTML(str)
 	}
 }
 

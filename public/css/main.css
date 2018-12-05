@@ -9,6 +9,15 @@ body {
     min-height: 100vh;
 }
 
+a.nohref:hover {
+    cursor: pointer;
+    text-decoration: underline!important;
+}
+
+td.nowrap {
+    white-space:nowrap;
+}
+
 #banner {
     position: absolute;
     top: 0;
@@ -197,8 +206,8 @@ ul a:focus {
     text-align: center;
 }
 .about img {
-    width: 300px;
-    height: 300px;
+    width: 65%;
+    height: auto;
     border-radius: 50%;
 }
 .about ul.social-list {
@@ -213,7 +222,7 @@ ul a:focus {
  }
 .about ul.social-list a {
     color: #444;
-    transition: 0.25s;
+    transition: 0.2s;
 }
 .about ul.social-list a:hover {
     color: #bbb;
