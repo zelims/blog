@@ -1,9 +1,10 @@
-{{ set . "title" (strcat "Tag Search - " .tag) }}
+{{ set . "title" (strcat "Search - " .search) }}
 {{ set . "active" "" }}
 {{template "templates/header.html" .}}
 {{template "templates/navigation.html" .}}
 
 <div class="page-container">
+    <h3 class="title-border">{{ .search }}</h3>
     {{ template "templates/posts.html" .post }}
 </div>
 

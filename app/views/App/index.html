@@ -4,6 +4,20 @@
 {{template "templates/navigation.html" .}}
 
 <div class="page-container">
+  <h3 class="title-border">Latest Posts</h3>
+  <div class="row mb-3">
+    <div class="col-12">
+      <form id="search" method="POST" action="/search">
+        <label class="sr-only" for="postSearch">Search</label>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text"><i class="fas fa-search"></i></div>
+          </div>
+          <input type="text" class="form-control" id="postSearch" name="postSearch" placeholder="Search for a post...">
+        </div>
+      </form>
+    </div>
+  </div>
   {{ template "templates/posts.html" .posts }}
 </div>
 

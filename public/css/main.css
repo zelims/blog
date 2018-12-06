@@ -19,6 +19,11 @@ td.nowrap {
     white-space:nowrap;
 }
 
+input#postSearch:focus {
+    box-shadow: none!important;
+    border-width: 2px;
+}
+
 /*#banner {
     position: absolute;
     top: 0;
@@ -222,6 +227,12 @@ ul a:focus {
     }
 }
 
+.title-border {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 1.5rem;
+}
+
 /* POST */
 .post-list {
     margin-bottom: 1.25rem;
@@ -249,7 +260,7 @@ ul a:focus {
 
 /** ABOUT **/
 .about-details {
-    margin: 0 auto;
+    margin: 1.5rem auto 0 auto;
     text-align: center;
 }
 .about img {
@@ -258,7 +269,7 @@ ul a:focus {
     border-radius: 50%;
 }
 .about ul.social-list {
-    width: 75%;
+    width: 50%;
     margin: 0 auto;
 }
 .about ul.social-list li {

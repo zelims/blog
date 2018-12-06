@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/revel/revel"
 	"github.com/zelims/blog/app"
 	"github.com/zelims/blog/app/models"
@@ -30,8 +31,24 @@ func (c Post) Keywords(tag string) revel.Result {
 	if post == nil {
 		return c.NotFound("Could not find any posts tagged %s", tag)
 	}
-	return c.Render(post, tag)
+	c.ViewArgs["post"] = post
+	c.ViewArgs["search"] = "Searching posts tagged #" + tag
+	return c.RenderTemplate("Post/search.html")
+}
 
+func (c Post) Search() revel.Result {
+	searchInp := c.Params.Get("postSearch")
+	searchQuery := "%" + searchInp + "%"
+	query, err := app.DB.Query("SELECT * FROM `posts` WHERE UPPER(content) " +
+		"LIKE UPPER(?) OR UPPER(title) LIKE UPPER(?) OR UPPER(description) LIKE UPPER(?) OR FIND_IN_SET(?, `tags`)",
+		searchQuery, searchQuery, searchQuery, searchInp)
+	if err != nil {
+		c.Log.Error("Query Error: ", err.Error())
+		return c.NotFound("Could not find any posts containing %s", searchInp)
+	}
+	post := c.getPostData(query)
+	search := fmt.Sprintf("Found %d posts containing %s", len(post), searchInp)
+	return c.Render(search, post)
 }
 
 func (c Post) getPostsByTag(tag string) []*models.Post {
