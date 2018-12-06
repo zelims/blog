@@ -2,11 +2,13 @@ package app
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/revel/revel"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/russross/blackfriday"
 	"html/template"
 	"log"
+	"os"
 	"strings"
 )
 
@@ -42,6 +44,13 @@ func setupTemplateFuncs() {
 	}
 	revel.TemplateFuncs["html"] = func(str string) template.HTML {
 		return template.HTML(str)
+	}
+	revel.TemplateFuncs["bannerImg"] = func(id int) template.HTML {
+		img := fmt.Sprintf("/public/img/posts/%d/banner.jpg", id)
+		if _, err := os.Stat(revel.BasePath + img); err != nil {
+			return ""
+		}
+		return template.HTML("<style>header.page-header::before { background: no-repeat center url(" + img + ");}</style>")
 	}
 }
 

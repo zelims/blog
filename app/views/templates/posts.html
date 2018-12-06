@@ -3,14 +3,18 @@
     <div class="col-12">
         <div class="card">
             <div class="post card-body">
-                <h3 class="post-title"><a href="/post/{{ .ID }}">{{ .Title }}</a></h3>
-                <small class="text-muted">Posted by <b>{{ .Author }}</b> on {{ .Date }}</small>
-                <p><small><i class="fas fa-tags"></i>&nbsp;
-                        {{ range $index, $tag := .TagArr }}
-                            {{if $index}},{{end}}
-                            <a href="/tag/{{ $tag }}">{{ $tag }}</a>
-                        {{ end }}
-                    </small></p>
+                <h4 class="float-left post-title"><a href="/post/{{ .ID }}">{{ .Title }}</a></h4>
+                <div class="float-right">
+                    <small><i class="fas fa-clock"></i> <span class="text-muted">{{ .Date }}</span></small>
+                    <br>
+                    <small><i class="fas fa-tags"></i>
+                            {{ range $index, $tag := .TagArr }}
+                                {{if $index}},{{end}}
+                                <a href="/tag/{{ $tag }}">{{ $tag }}</a>
+                            {{ end }}
+                        </small>
+                </div>
+                <div class="clearfix"></div>
                 <hr>
                 <p>{{ md .Description }}</p>
             </div>

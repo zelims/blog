@@ -6,6 +6,7 @@ import (
 	"github.com/revel/revel/cache"
 	"github.com/zelims/blog/app"
 	"github.com/zelims/blog/app/models"
+	"log"
 	"time"
 )
 
@@ -31,7 +32,16 @@ func (c App) Projects() revel.Result {
 	var repos []models.RepositoryData
 	if err := cache.Get("repos", &repos); err != nil {
 		repos = models.Repositories()
-		go cache.Set("repos", repos, 10*time.Minute)
+		if repos == nil {
+			hadError := "Failed to fetch GitHub data"
+			return c.Render(repos, hadError)
+		}
+		go func() {
+			err = cache.Set("repos", repos, 10*time.Minute)
+			if err != nil {
+				log.Printf("Error Caching Repos: %s", err.Error())
+			}
+		}()
 	}
 	return c.Render(repos)
 }

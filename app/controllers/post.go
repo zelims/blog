@@ -53,7 +53,7 @@ func (c Post) getPostByID(id int) *models.Post {
 	curPost := &models.Post{}
 	for query.Next() {
 		if err = query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
-			&curPost.Tags, &curPost.Date); err != nil {
+			&curPost.Description, &curPost.Tags, &curPost.Date); err != nil {
 			log.Printf("[!] Error scanning to post: %s", err.Error())
 		}
 		curPost.Format()
@@ -66,7 +66,7 @@ func (c Post) getPostData(query *sql.Rows) []*models.Post {
 	for query.Next() {
 		curPost := &models.Post{}
 		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
-			&curPost.Tags, &curPost.Date); err != nil {
+			&curPost.Description, &curPost.Tags, &curPost.Date); err != nil {
 			log.Printf("[!] Error scanning to post: %s", err.Error())
 		}
 		curPost.Format()

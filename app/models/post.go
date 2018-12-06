@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/zelims/blog/app"
 	"log"
 	"strconv"
@@ -29,8 +30,8 @@ func GetPosts() []*Post {
 	for query.Next() {
 		curPost := &Post{}
 		if err = query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
-			&curPost.Tags, &curPost.Date); err != nil {
-			log.Printf("[!] Error scanning to post: %s", err.Error())
+			&curPost.Description, &curPost.Tags, &curPost.Date); err != nil {
+			log.Printf("[!] Error scanning post: %s", err.Error())
 		}
 		curPost.Format()
 		allPosts = append(allPosts, curPost)
@@ -57,8 +58,5 @@ func (p *Post) formatTags() {
 }
 
 func (p *Post) formatContent() {
-	p.Description = p.Content
-	if len(p.Content) > 500 {
-		p.Description = p.Content[:500]
-	}
+	p.Description += fmt.Sprintf("... <a href=\"/post/%d\" class=\"read-more\">Read more</a>", p.ID)
 }

@@ -43,13 +43,15 @@ func Repositories() []RepositoryData {
 	// uses GitHub API to get JSON data of repos
 	res, err := http.Get("https://api.github.com/users/" + _GITHUB_USER + "/repos")
 	if err != nil {
-		panic(err.Error())
+		log.Printf("GH Request Error: %s", err.Error())
+		return nil
 	}
 
 	// gets all the data in a raw string
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		panic(err.Error())
+		log.Printf("Error Reading Output: %s", err.Error())
+		return nil
 	}
 
 	rData := new(repoData)
@@ -87,7 +89,6 @@ func (p repoData) Len() int {
 func (p repoData) Less(i, j int) bool {
 	t1, _ := time.Parse("02 Jan 2006", p[i].LastUpdate)
 	t2, _ := time.Parse("02 Jan 2006", p[j].LastUpdate)
-	log.Printf("Checking if %s is before %s", p[i].LastUpdate, p[j].LastUpdate)
 	return t1.After(t2)
 }
 

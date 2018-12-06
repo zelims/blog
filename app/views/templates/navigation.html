@@ -1,19 +1,18 @@
-<div id="banner"></div>
-<div class="container">
-    <div class="header">
-        <div class="logo">
-            <h3>Some Header</h3>
-            <small>Some catchy ass subheader</small>
+<header class="page-header">
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <h3>zelims</h3>
+                <span>Programming, IT Security, DevOps, Gaming</span>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="head-nav">
+            <ul class="cl-effect-15">
+                <li {{ if eq .active "home" }} class="active" {{ end }}><a href="/">HOME</a></li>
+                <li {{ if eq .active "about" }} class="active" {{ end }}><a href="/about">ABOUT</a></li>
+                <li {{ if eq .active "projects" }} class="active" {{ end }}><a href="/projects">PROJECTS</a></li>
+            </ul>
         </div>
     </div>
-    <div class="clearfix"> </div>
-    <div class="head-nav">
-        <span class="menu"> </span>
-        <ul class="cl-effect-15">
-            <li {{ if eq .active "home" }} class="active" {{ end }}><a href="/">HOME</a></li>
-            <li {{ if eq .active "about" }} class="active" {{ end }}><a href="/about">ABOUT</a></li>
-            <li {{ if eq .active "projects" }} class="active" {{ end }}><a href="/projects">PROJECTS</a></li>
-            <div class="clearfix"> </div>
-        </ul>
-    </div>
-</div>
+</header>
