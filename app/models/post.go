@@ -20,16 +20,25 @@ type Post struct {
 	Date				string
 }
 
-func GetPosts() []*Post {
-	allPosts := make([]*Post, 0)
+func SizeOfAllPosts() int {
+	size := 0
+	query := app.DB.QueryRow("SELECT COUNT(*) FROM posts")
+	if err := query.Scan(&size); err != nil {
+		log.Printf("Failed to count rows: %s", err.Error())
+		return -1
+	}
+	return size
+}
 
+func AllPosts() []*Post {
+	allPosts := make([]*Post, 0)
 	query, err := app.DB.Query("SELECT * FROM posts")
 	if err != nil {
-		log.Printf("[!] Error getting posts: %s", err.Error())
+		log.Printf("Error getting posts: %s", err.Error())
 	}
 	for query.Next() {
 		curPost := &Post{}
-		if err = query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
+		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
 			&curPost.Description, &curPost.Tags, &curPost.Date); err != nil {
 			log.Printf("[!] Error scanning post: %s", err.Error())
 		}
@@ -37,6 +46,24 @@ func GetPosts() []*Post {
 		allPosts = append(allPosts, curPost)
 	}
 	return allPosts
+}
+
+func Posts(offset int) ([]*Post, int) {
+	posts := make([]*Post, 0)
+	query, err := app.DB.Query("SELECT * FROM posts LIMIT ?, 8", (offset - 1) * 8)
+	if err != nil {
+		log.Printf("Error getting posts: %s", err.Error())
+	}
+	for query.Next() {
+		curPost := &Post{}
+		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
+			&curPost.Description, &curPost.Tags, &curPost.Date); err != nil {
+			log.Printf("[!] Error scanning post: %s", err.Error())
+		}
+		curPost.Format()
+		posts = append(posts, curPost)
+	}
+	return posts, SizeOfAllPosts()
 }
 
 func (p *Post) Format() {

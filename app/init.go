@@ -3,12 +3,13 @@ package app
 import (
 	"database/sql"
 	"fmt"
-	"github.com/revel/revel"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/revel/revel"
 	"github.com/russross/blackfriday"
 	"html/template"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -38,6 +39,13 @@ func setupTemplateFuncs() {
 	revel.TemplateFuncs["strcat"] = func(strs ...string) string {
 		return strings.Trim(strings.Join(strs, ""), " ")
 	}
+	revel.TemplateFuncs["strcmp"] = func(str1, str2 string) bool {
+		return str1 == str2
+	}
+	revel.TemplateFuncs["strintcmp"] = func(str string, i int) bool {
+		itoa := strconv.Itoa(i)
+		return str == itoa
+	}
 
 	revel.TemplateFuncs["md"] = func(str string) template.HTML {
 		return template.HTML(string(blackfriday.MarkdownCommon([]byte(str))))
@@ -51,6 +59,16 @@ func setupTemplateFuncs() {
 			return ""
 		}
 		return template.HTML("<style>header.page-header::before { background: no-repeat center url(" + img + ");}</style>")
+	}
+	revel.TemplateFuncs["pagination"] = func(n int)  (stream chan int){
+		stream = make(chan int)
+		go func() {
+			for i := 1; i <= n; i++ {
+				stream <- i
+			}
+			close(stream)
+		}()
+		return
 	}
 }
 

@@ -1,0 +1,24 @@
+{{ range $i, $key := .posts }}
+    <div class="row post-list">
+        <div class="col-12">
+            <div class="card">
+                <div class="post card-body">
+                    <h4 class="float-left post-title"><a href="/post/{{ $key.ID }}">{{ $key.Title }}</a></h4>
+                    <div class="float-right">
+                        <small><i class="fas fa-clock"></i> <span class="text-muted">{{ $key.Date }}</span></small>
+                        <br>
+                        <small><i class="fas fa-tags"></i>
+                            {{ range $index, $tag := $key.TagArr }}
+                                {{if $index}},{{end}}
+                                <a href="/tag/{{ $tag }}">{{ $tag }}</a>
+                            {{ end }}
+                        </small>
+                    </div>
+                    <div class="clearfix"></div>
+                    <hr>
+                    <p>{{ md $key.Description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{{ end }}

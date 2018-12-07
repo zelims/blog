@@ -7,6 +7,8 @@ import (
 	"github.com/zelims/blog/app"
 	"github.com/zelims/blog/app/models"
 	"log"
+	"math"
+	"strconv"
 	"time"
 )
 
@@ -14,9 +16,28 @@ type App struct {
 	*revel.Controller
 }
 
+type Pagination struct {
+	Pages		int
+
+}
+
 func (c App) Index() revel.Result {
-	posts := models.GetPosts()
-	return c.Render(posts)
+	posts, size := models.Posts(1)
+
+	pagen := &Pagination{int(math.Ceil(float64(size) / 8)) }
+	pageNum := 1
+	return c.Render(posts, pagen, pageNum)
+}
+
+func (c App) PagePosts() revel.Result {
+	pageNum := 1
+	if c.Params.Get("num") != "" {
+		pageNum, _ = strconv.Atoi(c.Params.Get("num"))
+	}
+	posts, _ := models.Posts(pageNum)
+
+	c.ViewArgs["posts"] = posts
+	return c.RenderTemplate("Post/list.html")
 }
 
 func (c App) About() revel.Result {

@@ -366,6 +366,10 @@ ul a:focus {
     color: #fff!important;
 }
 
+.pagination a.page-link:hover {
+    color: #aaa;
+}
+
 /* Footer */
 footer {
     background: #454346;

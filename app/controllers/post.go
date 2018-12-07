@@ -7,6 +7,7 @@ import (
 	"github.com/zelims/blog/app"
 	"github.com/zelims/blog/app/models"
 	"log"
+	"math"
 	"strconv"
 )
 
@@ -31,8 +32,10 @@ func (c Post) Keywords(tag string) revel.Result {
 	if post == nil {
 		return c.NotFound("Could not find any posts tagged %s", tag)
 	}
-	c.ViewArgs["post"] = post
+	c.ViewArgs["posts"] = post
 	c.ViewArgs["search"] = "Searching posts tagged #" + tag
+	c.ViewArgs["pagen"] = &Pagination{int(math.Ceil(float64(len(post)) / 8)) }
+	c.ViewArgs["pageNum"] = 1
 	return c.RenderTemplate("Post/search.html")
 }
 
@@ -46,9 +49,11 @@ func (c Post) Search() revel.Result {
 		c.Log.Error("Query Error: ", err.Error())
 		return c.NotFound("Could not find any posts containing %s", searchInp)
 	}
-	post := c.getPostData(query)
-	search := fmt.Sprintf("Found %d posts containing %s", len(post), searchInp)
-	return c.Render(search, post)
+	posts := c.getPostData(query)
+	search := fmt.Sprintf("Found %d posts containing %s", len(posts), searchInp)
+	c.ViewArgs["pagen"] = &Pagination{int(math.Ceil(float64(len(posts)) / 8)) }
+	c.ViewArgs["pageNum"] = 1
+	return c.Render(search, posts)
 }
 
 func (c Post) getPostsByTag(tag string) []*models.Post {
