@@ -1,0 +1,65 @@
+/* Container Styles */
+.panel-container {
+    width:80%;
+    padding: 2rem 30px;
+    margin: 0 auto;
+    height: auto;
+    position: relative;
+    flex: 1;
+    background: #fff;
+    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.35);
+    -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.35);
+}
+@media (max-width:576px) {
+    .panel-container {
+        max-width:540px;
+    }
+}
+@media (max-width:768px) {
+    .panel-container {
+        max-width:720px
+    }
+}
+@media (max-width:992px) {
+    .panel-container {
+        max-width:960px
+    }
+}
+@media (max-width:1200px) {
+    .panel-container {
+        max-width:1140px
+    }
+}
+
+.header-container {
+    width: 82.5%;
+    display: inherit;
+    flex: none;
+    margin: 0 auto;
+    padding: inherit;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background: inherit;
+}
+
+.clearnav {
+    float: left;
+    clear: both;
+}
+
+.navbar .nav-item.active .nav-link {
+    padding-bottom: 0;
+    border-bottom: 1px solid #fff;
+}
+.navbar .nav-item .nav-link {
+    padding-bottom: 10px;
+    border-bottom: 1px solid transparent;
+    transition: 0.25s;
+}
+
+.navbar .nav-item .nav-link:hover {
+    border-bottom-color: #fff;
+    padding-bottom: 0;
+}

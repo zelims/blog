@@ -11,9 +11,21 @@ type Manage struct {
 }
 
 func (c Manage) Index() revel.Result {
+	return c.checkAuth()
+}
+
+func (c Manage) Posts() revel.Result {
+	return c.checkAuth()
+}
+
+func (c Manage) Analytics() revel.Result {
+	return c.checkAuth()
+}
+
+func (c Manage) checkAuth() revel.Result {
 	if c.currentUser() == nil {
 		return c.Redirect(routes.Sessions.Index())
 	}
-	username := c.currentUser().Username
-	return c.Render(username)
+	c.ViewArgs["username"] = c.currentUser().Username
+	return c.Render()
 }

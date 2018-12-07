@@ -24,6 +24,8 @@ POST    /auth/login                             Sessions.Login
 
 # Management Section
 GET     /manage                                 Manage.Index
+GET     /manage/posts                           Manage.Posts
+GET     /manage/analytics                       Manage.Analytics
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
