@@ -24,6 +24,10 @@ input#postSearch:focus {
     border-width: 2px;
 }
 
+.alert i {
+    width: 18px;
+}
+
 /*#banner {
     position: absolute;
     top: 0;

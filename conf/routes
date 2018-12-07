@@ -17,6 +17,14 @@ GET     /post/:id                               Post.Show
 GET     /tag/:tag                               Post.Keywords
 POST    /search                                 Post.Search
 
+# User Sessions
+GET     /login                                  Sessions.Index
+GET     /logout                                 Sessions.Logout
+POST    /auth/login                             Sessions.Login
+
+# Management Section
+GET     /manage                                 Manage.Index
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 

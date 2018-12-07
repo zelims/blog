@@ -1,0 +1,32 @@
+{{ set . "title" "zelims - Login" }}
+{{ set . "active" "login" }}
+{{template "templates/header.html" .}}
+{{template "templates/navigation.html" .}}
+
+<div class="page-container">
+    <h3 class="title-border">Login</h3>
+    {{if .flash}}
+        {{template "flash.html" .}}
+    {{end}}
+    <form action="{{url "Sessions.Login"}}" method="POST">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" name="username" id="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
+            <label class="form-check-label" for="rememberMe">Remember me</label>
+        </div>
+        <div class="form-group">
+            RECAPTCHA HERE
+        </div>
+        <hr>
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+</div>
+
+{{template "templates/footer.html" .}}
