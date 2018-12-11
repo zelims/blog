@@ -11,21 +11,13 @@ type Manage struct {
 }
 
 func (c Manage) Index() revel.Result {
-	return c.checkAuth()
+	return c.checkAuth("Manage/index.html")
 }
 
-func (c Manage) Posts() revel.Result {
-	return c.checkAuth()
-}
-
-func (c Manage) Analytics() revel.Result {
-	return c.checkAuth()
-}
-
-func (c Manage) checkAuth() revel.Result {
+func (c Manage) checkAuth(tmpl string) revel.Result {
 	if c.currentUser() == nil {
 		return c.Redirect(routes.Sessions.Index())
 	}
 	c.ViewArgs["username"] = c.currentUser().Username
-	return c.Render()
+	return c.RenderTemplate(tmpl)
 }
