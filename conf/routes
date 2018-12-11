@@ -28,6 +28,7 @@ GET     /manage                                 Manage.Index
 # Post Management
 GET     /manage/posts                           Posts.View
 GET     /manage/posts/new                       Posts.New
+GET     /manage/posts/edit/:id                  Posts.Edit
 
 # Analytics
 GET     /manage/analytics                       Analytics.View
