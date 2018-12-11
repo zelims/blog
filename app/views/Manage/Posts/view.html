@@ -1,0 +1,9 @@
+{{ set . "title" "View Posts" }}
+{{ set . "active" "posts" }}
+{{ template "templates/manage/header.html" . }}
+{{ template "templates/manage/navigation.html" . }}
+
+<div class="content">
+    Hello {{ .username }}
+</div>
+{{ template "templates/manage/footer.html" . }}

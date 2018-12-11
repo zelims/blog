@@ -31,7 +31,7 @@ GET     /manage/posts/new                       Posts.New
 
 # Analytics
 GET     /manage/analytics                       Analytics.View
-GET     /manage/posts                           Analytics.Posts
+GET     /manage/analytics/posts                 Analytics.Posts
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

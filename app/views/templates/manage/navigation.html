@@ -3,7 +3,7 @@
         <li class="nav-item nav-category">
             <span class="nav-link">General</span>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item {{ if eq .active "dashboard" }}active{{ end }}">
             <a class="nav-link" href="{{ url "Manage.Index" }}">
                 <span class="menu-title">Dashboard</span>
                 <i class="fas fa-tachometer-alt"></i>
@@ -12,13 +12,13 @@
         <li class="nav-item nav-category">
             <span class="nav-link">Posts</span>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ if eq .active "posts" }}active{{ end }}">
             <a class="nav-link" href="{{ url "Posts.View" }}">
                 <span class="menu-title">View</span>
                 <i class="fas fa-list"></i>
             </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ if eq .active "newpost" }}active{{ end }}">
             <a class="nav-link" href="{{ url "Posts.New" }}">
                 <span class="menu-title">New</span>
                 <i class="fas fa-plus"></i>
@@ -27,13 +27,13 @@
         <li class="nav-item nav-category">
             <span class="nav-link">Analytics</span>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ if eq .active "analytics" }}active{{ end }}">
             <a class="nav-link" href="{{ url "Analytics.View" }}">
                 <span class="menu-title">Website</span>
                 <i class="fas fa-chart-area"></i>
             </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ if eq .active "postanalytics" }}active{{ end }}">
             <a class="nav-link" href="{{ url "Analytics.Posts" }}">
                 <span class="menu-title">Posts</span>
                 <i class="fas fa-chart-line"></i>
@@ -53,4 +53,3 @@
             </div>
         </li>
     </nav>
-    <div class="content">
