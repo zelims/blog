@@ -59,6 +59,10 @@ func (c Sessions) userLogin(username, password string) *models.User{
 	return &user
 }
 
+func (c Sessions) Edit() revel.Result {
+	return c.checkAuth("Sessions/edit.html")
+}
+
 func (c Sessions) Login(username string, password string, rememberMe bool) revel.Result {
 	user := c.userLogin(username, encryptPwd(password))
 	if user != nil {
@@ -86,4 +90,17 @@ func (c Sessions) Logout() revel.Result{
 func encryptPwd(pwd string) string {
 	h := sha256.Sum256([]byte(pwd))
 	return base64.StdEncoding.EncodeToString(h[:])
+}
+
+
+func (c Sessions) Authenticated() bool {
+	return !(c.currentUser() == nil)
+}
+
+func (c Sessions) checkAuth(tmpl string) revel.Result {
+	if c.currentUser() == nil {
+		return c.Redirect(routes.Sessions.Index())
+	}
+	c.ViewArgs["username"] = c.currentUser().Username
+	return c.RenderTemplate(tmpl)
 }

@@ -19,6 +19,7 @@ POST    /search                                 Post.Search
 
 # User Sessions
 GET     /login                                  Sessions.Index
+GET     /user                                   Sessions.Edit
 GET     /logout                                 Sessions.Logout
 POST    /auth/login                             Sessions.Login
 

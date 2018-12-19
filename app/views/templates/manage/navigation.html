@@ -42,6 +42,22 @@
                 <i class="fas fa-chart-line"></i>
             </a>
         </li>
+
+        <li class="nav-item nav-category">
+            <span class="nav-link">Account</span>
+        </li>
+        <li class="nav-item {{ if eq .active "profile" }}active{{ end }}">
+            <a class="nav-link" href="{{ url "Sessions.Edit" }}">
+                <span class="menu-title">Edit</span>
+                <i class="fas fa-user"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url "Sessions.Logout" }}">
+                <span class="menu-title">Logout</span>
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </li>
     </ul>
 </nav>
 <div class="content-wrapper">
