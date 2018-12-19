@@ -16,7 +16,6 @@ body {
 .sidebar {
     width: 13%;
     background: #2a2a2a;
-    height: 100vh;
     font-size: 0.9rem;
 }
 .sidebar .nav .nav-category {
@@ -89,4 +88,8 @@ body {
 }
 .collapse {
     z-index: 999;
+}
+
+.CodeMirror {
+    height: 425px!important;
 }

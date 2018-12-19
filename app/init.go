@@ -1,9 +1,9 @@
 package app
 
 import (
-	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 	"github.com/revel/revel"
 	"github.com/russross/blackfriday"
 	"html/template"
@@ -21,13 +21,13 @@ var (
 	BuildTime string
 )
 
-var DB *sql.DB
+var DB *sqlx.DB
 
 func initDB() {
 	driver := revel.Config.StringDefault("db.driver", "mysql")
 	connectString := revel.Config.StringDefault("db.connect", "root:@(localhost:3306)/blog")
 
-	db, err := sql.Open(driver, connectString)
+	db, err := sqlx.Connect(driver, connectString)
 	if err != nil {
 		log.Fatal("[!] DB Err: ", err)
 	}

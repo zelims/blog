@@ -15,4 +15,35 @@
 {{range .moreScripts}}
     <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
 {{end}}
+
+{{ if or (eq .active "newpost") (eq .active "editpost") }}
+    <script>
+        $(function() {
+            let simplemde = new SimpleMDE({
+                element: $("#post-content")[0],
+                placeholder: "Post body...",
+                status: false,
+            });
+
+            updateCharacterCount($("#description-chars"), 500, $("#post-description").val().length);
+            $("#post-description").on('change keyup keypress keydown paste', function() {
+                updateCharacterCount($("#description-chars"), 500, $(this).val().length);
+            });
+
+            function updateCharacterCount(element, max, count) {
+                count = Number(max - count);
+                if(count <= 20 && count >= 0) {
+                    $(element).attr('style', 'color: #ea821c!important;');
+                } else if(count < 0) {
+                    $(element).attr('style', 'color: #f00!important;');
+                } else {
+                    $(element).attr('style', '');
+                }
+
+                $(element).text(count);
+            }
+        });
+
+    </script>
+{{ end }}
 </html>

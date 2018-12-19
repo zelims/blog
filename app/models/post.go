@@ -13,10 +13,11 @@ type Post struct {
 	ID					int
 	Author				string
 	Title				string
-	Description			string
 	Content				string
+	Description			string
 	Tags				string
-	TagArr 				[]string
+	TagArr 				[]string `db:"-"`
+	TagsValue			string	 `db:"-"`
 	Date				string
 }
 
@@ -28,6 +29,14 @@ func SizeOfAllPosts() int {
 		return -1
 	}
 	return size
+}
+
+func PostByID(id int) (post Post) {
+	err := app.DB.Get(&post, "SELECT * FROM posts WHERE id = ?", id)
+	if err != nil {
+		log.Printf("Could not get post #%d: %s", id, err.Error())
+	}
+	return
 }
 
 func AllPosts() []*Post {
@@ -50,7 +59,7 @@ func AllPosts() []*Post {
 
 func Posts(offset int) ([]*Post, int) {
 	posts := make([]*Post, 0)
-	query, err := app.DB.Query("SELECT * FROM posts LIMIT ?, 8", (offset - 1) * 8)
+	query, err := app.DB.Query("SELECT * FROM posts ORDER BY date DESC LIMIT ?, 8", (offset - 1) * 8)
 	if err != nil {
 		log.Printf("Error getting posts: %s", err.Error())
 	}
@@ -79,6 +88,7 @@ func (p *Post) formatDate() {
 }
 
 func (p *Post) formatTags() {
+	p.TagsValue = p.Tags
 	p.Tags = strings.ToLower(strings.Replace(p.Tags, ",", " ", -1))
 	p.TagArr = strings.Split(p.Tags, " ") // creates the keyword array
 

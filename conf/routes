@@ -30,6 +30,9 @@ GET     /manage/posts                           Posts.View
 GET     /manage/posts/new                       Posts.New
 GET     /manage/posts/edit/:id                  Posts.Edit
 
+POST    /manage/posts/action/create             Posts.Create
+POST    /manage/posts/action/edit               Posts.Modify
+
 # Analytics
 GET     /manage/analytics                       Analytics.View
 GET     /manage/analytics/posts                 Analytics.Posts

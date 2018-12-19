@@ -1,0 +1,19 @@
+{{ set . "title" (strcat "Edit Post - " .post.Title) }}
+{{ set . "active" "editpost" }}
+{{ append . "moreStyles" "css/simplemde.min.css" }}
+{{ template "templates/manage/header.html" . }}
+{{ template "templates/manage/navigation.html" . }}
+
+<div class="content">
+    <form class="px-3 py-2" method="POST" action="{{ url "Posts.Modify" }}">
+        <h3>Edit Post</h3>
+        <hr>
+        {{ template "Manage/Posts/form.html" .post }}
+        <hr>
+        <a href="{{ url "Posts.View" }}" class="btn btn-danger float-left"><i class="fas fa-times"></i> Cancel</a>
+        <button type="submit" class="btn btn-success float-right"><i class="fas fa-check"></i> Submit Edit</button>
+        <div class="clearfix"></div>
+    </form>
+</div>
+{{ append . "moreScripts" "js/simplemde.min.js" }}
+{{ template "templates/manage/footer.html" . }}
