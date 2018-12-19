@@ -18,6 +18,16 @@ body {
     background: #2a2a2a;
     font-size: 0.9rem;
 }
+.sidebar .sidebar-title {
+    height: 60px;
+    width: 100%;
+    text-align: center;
+}
+.sidebar .sidebar-title span {
+    color: #fff;
+    font-size: 1.5rem;
+    line-height: 60px;
+}
 .sidebar .nav .nav-category {
     cursor: default;
     text-transform: uppercase;
@@ -28,9 +38,9 @@ body {
 .sidebar .nav .nav-category:not(:first-child) {
     margin-top: 2rem;
 }
-.sidebar .nav .nav-category:first-child {
+/*.sidebar .nav .nav-category:first-child {
     margin-top: 4rem;
-}
+}*/
 
 .sidebar .nav {
     width: 100%;
@@ -64,8 +74,8 @@ body {
     border-bottom: 1px solid transparent;
 }
 .sidebar .nav .nav-item.active, .sidebar .nav .nav-item:not(.nav-category):hover {
-    border-top-color: rgba(255, 255, 255, 0.4);
-    border-bottom-color: rgba(255, 255, 255, 0.4);
+    border-top-color: rgba(255, 255, 255, 0.2);
+    border-bottom-color: rgba(255, 255, 255, 0.2);
 }
 
 .sidebar .sub-menu {

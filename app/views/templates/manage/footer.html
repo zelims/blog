@@ -35,39 +35,15 @@
 {{ if eq .active "dashboard" }}
 <script>
     let visitorMap = $('#visitor-map');
-    visitorMap.vectorMap({
-        map: 'world_mill',
-        scaleColors: ['#C8EEFF', '#0071A4'],
-        normalizeFunction: 'polynomial',
-        zoomButtons: false,
-        zoomOnScroll: false,
-        panOnDrag: false,
-        hoverOpacity: 0.7,
-        hoverColor: false,
-        markerStyle: {
-            initial: {
-                fill: '#7E57C2',
-                stroke: '#383f47',
-                r: 6.5,
-            }
-        },
-        backgroundColor: 'transparent',
-        regionStyle: {
-            initial: {
-                fill: '#8d8d8d'
-            }
-        },
-        onRegionOver: function(e, tip, code) {
-            e.preventDefault();
-        },
-        onRegionTipShow: function (e, tip, code) {
-            e.preventDefault();
-        }
+    let seriesdata = {
+        {{ range $k, $v := .visitors }}
+            "{{ $k }}": {{ $v }},
+        {{ end }}
+    };
+    createMap(visitorMap, "", seriesdata);
+    $(window).resize(function(){
+        createMap(visitorMap, "", seriesdata);
     });
-
-    let serverMapSvg = $('#visitor-map .jvectormap-container svg');
-    serverMapSvg.removeAttr('width');
-    serverMapSvg.removeAttr('height');
 </script>
 {{ end }}
 {{ if or (eq .active "newpost") (eq .active "editpost") }}
