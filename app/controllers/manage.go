@@ -17,6 +17,7 @@ func (c Manage) Index() revel.Result {
 func (c Manage) Authenticated() bool {
 	return !(c.currentUser() == nil)
 }
+
 func (c Manage) checkAuth(tmpl string) revel.Result {
 	if c.currentUser() == nil {
 		return c.Redirect(routes.Sessions.Index())

@@ -374,6 +374,45 @@ ul a:focus {
     color: #aaa;
 }
 
+
+/*====================================
+ Alert
+ ====================================*/
+.notify-alert {
+    padding: 0;
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50vh;
+    z-index: 999;
+    box-shadow: 1px 1px 5px #000;
+
+    transition: all 0.75s;
+    -moz-transition: all 0.75s;
+    -webkit-transition: all 0.75s;
+    -o-transition: all 0.75s;
+
+    top: -100px;
+    left: 0;
+    right: 0;
+    visibility: hidden;
+}
+.notify-alert.show {
+    visibility: visible;
+    top: 45px;
+}
+.notify-alert .media-body {
+    min-height: 100%;
+}
+.notify-alert .media i {
+    color: #fff;
+    padding: 0 0.65rem;
+}
+.notify-alert .media-body #notify-alert-text:before {
+    content: '\200b';
+}
+
+
 /* Footer */
 footer {
     background: #454346;

@@ -93,3 +93,147 @@ body {
 .CodeMirror {
     height: 425px!important;
 }
+
+/*====================================
+ Notification Panels
+ ====================================*/
+.notification-panel {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    border-radius: 4px;
+    color: #FFF;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    cursor: default;
+}
+
+.notification-panel .icon {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    min-width: 85px;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px 0 0 4px;
+    font-size: 2.5rem;
+}
+
+.notification-panel .info {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    padding: 0 20px;
+    -ms-flex-item-align: center;
+    align-self: center;
+}
+
+.notification-panel .info h4 {
+    text-transform: uppercase;
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.notification-panel .info p {
+    margin: 0;
+    font-size: 16px;
+}
+
+.notification-panel.default {
+    background-color: #919096;
+}
+
+.notification-panel.default.coloured-icon {
+    background-color: #fff;
+    color: #2a2a2a;
+}
+
+.notification-panel.default.coloured-icon .icon {
+    background-color: #c1c1c1;
+    color: #fff;
+}
+
+.notification-panel.good {
+    background-color: #009688;
+}
+
+.notification-panel.good.coloured-icon {
+    background-color: #fff;
+    color: #2a2a2a;
+}
+
+.notification-panel.good.coloured-icon .icon {
+    background-color: #009688;
+    color: #fff;
+}
+
+.notification-panel.info {
+    background-color: #3e8dc3;
+}
+
+.notification-panel.info.coloured-icon {
+    background-color: #fff;
+    color: #2a2a2a;
+}
+
+.notification-panel.info.coloured-icon .icon {
+    background-color: #3e8dc3;
+    color: #fff;
+}
+
+.notification-panel.warning {
+    background-color: #ffc107;
+}
+
+.notification-panel.warning.coloured-icon {
+    background-color: #fff;
+    color: #2a2a2a;
+}
+
+.notification-panel.warning.coloured-icon .icon {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+.notification-panel.error {
+    background-color: #dc3545;
+}
+
+.notification-panel.error.coloured-icon {
+    background-color: #fff;
+    color: #2a2a2a;
+}
+
+.notification-panel.error.coloured-icon .icon {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/*====================================
+ Notify Card
+ ====================================*/
+.card-header {
+    font-size: 1.35rem;
+}
+.card .list-group {
+    font-size: 1rem;
+}
+.card .list-group .list-group-item span.badge {
+    float: right;
+    line-height: 1.15rem;
+    color: #aaa;
+    text-align: right;
+    /* width: 75px;*/
+}
+.card .card-header-section {
+    border-bottom: 1px solid #bbb;
+    padding-bottom: 0.25rem;
+    margin-bottom: 1rem;
+}

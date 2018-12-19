@@ -16,6 +16,9 @@ type Sessions struct {
 }
 
 func (c Sessions) Index() revel.Result {
+	if c.currentUser() != nil {
+		return c.Redirect(routes.Manage.Index())
+	}
 	return c.RenderTemplate("Sessions/login.html")
 }
 
@@ -69,6 +72,7 @@ func (c Sessions) Login(username string, password string, rememberMe bool) revel
 		return c.Redirect(routes.Manage.Index())
 	}
 	c.Flash.Out["username"] = username
+
 	c.Flash.Error("Login Failed")
 	return c.Redirect(routes.Sessions.Index())
 }

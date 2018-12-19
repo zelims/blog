@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{{if .flash.success}}
+    <script>
+        showNotifyAlert(null, "custom-notify", "{{.flash.success}}", "success");
+    </script>
+{{end}}
 
-</body>
-</html>
+{{if or .errors .flash.error}}
+    <script>
+        {{ if .errors }}
+            let errors = [];
+            {{range .errors}}
+                errors.push("{{.}}");
+            {{end}}
+            showNotifyAlert(null, "custom-notify", errors, "danger", 4000);
+        {{ else }}
+            showNotifyAlert(null, "custom-notify", "{{ .flash.error }}", "danger", 6000);
+        {{ end }}
+    </script>
+{{end}}
+

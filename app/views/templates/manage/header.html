@@ -14,9 +14,5 @@
     {{range .moreStyles}}
         <link rel="stylesheet" type="text/css" href="/public/{{.}}">
     {{end}}
-
-    {{ if eq .active "post" }}
-        {{ bannerImg .post.ID }}
-    {{ end }}
 </head>
 <body>

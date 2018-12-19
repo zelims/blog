@@ -31,17 +31,14 @@ func SizeOfAllPosts() int {
 	return size
 }
 
-func PostByID(id int) (post Post) {
-	err := app.DB.Get(&post, "SELECT * FROM posts WHERE id = ?", id)
-	if err != nil {
-		log.Printf("Could not get post #%d: %s", id, err.Error())
-	}
+func PostByID(id int) (post Post, err error) {
+	err = app.DB.Get(&post, "SELECT * FROM posts WHERE id = ?", id)
 	return
 }
 
 func AllPosts() []*Post {
 	allPosts := make([]*Post, 0)
-	query, err := app.DB.Query("SELECT * FROM posts")
+	query, err := app.DB.Query("SELECT * FROM posts ORDER BY date DESC")
 	if err != nil {
 		log.Printf("Error getting posts: %s", err.Error())
 	}

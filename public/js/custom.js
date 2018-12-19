@@ -53,3 +53,56 @@ function switchPage(page) {
         }
     });
 }
+
+/**
+ * Show Notification at top of screen
+ * @param parent        (null)              =   parent div (a, btn, etc.)
+ * @param target_id     (notify-value)      =   id of the target notify (data-value attr on parent)
+ * @param text          (notify-text)       =   text of message
+ * @param scheme        (notify-scheme)     =   color scheme (bootstrap)
+ * @param timeout       (notify-timeout)    =   timeout in ms
+ */
+function showNotifyAlert(parent, target_id="", text="", scheme="", timeout=2500) {
+
+    target_id = '#' + target_id;
+
+    $(target_id).addClass('show');
+
+    if(text === "" && parent)
+        text = parent.attr('notify-text');
+
+    $(target_id).find('#notify-alert-text').html(text);
+
+    if(scheme === "" && parent)
+        scheme = parent.attr('notify-scheme');
+
+    if(timeout === 2500 && parent) {
+        let dto = parent.attr('notify-timeout');
+        if(dto)
+            timeout = dto;
+    }
+
+    var icon;
+    switch(scheme) {
+        case "danger":
+            icon = "fa-times";
+            break;
+        case "warning":
+            icon = "fa-exclamation-circle";
+            break;
+        case "success":
+            icon = "fa-check";
+            break;
+        case "info":
+            icon = "fa-question";
+            break;
+        default:
+            scheme = "primary";
+            icon = "fa-exclamation";
+    }
+    $(target_id).find('#notify-alert-scheme').addClass('bg-' + scheme);
+    $(target_id).find('#notify-alert-icon').addClass(icon);
+    setTimeout(function() {
+        $(target_id).removeClass("show");
+    }, timeout);
+}

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/revel/revel"
 	"github.com/zelims/blog/app"
 	"github.com/zelims/blog/app/models"
@@ -23,7 +24,13 @@ func (p Posts) New() revel.Result {
 }
 
 func (p Posts) Edit(id int) revel.Result {
-	p.ViewArgs["post"] = models.PostByID(id)
+	post, err := models.PostByID(id)
+	if err != nil  {
+		log.Printf("Couldn't find Post #%d: %s", id, err.Error())
+		p.Flash.Error(err.Error())
+		return p.Redirect(routes.Posts.View())
+	}
+	p.ViewArgs["post"] = post
 	return p.checkAuth("Manage/Posts/edit.html")
 }
 
@@ -43,9 +50,11 @@ func (p Posts) Create() revel.Result {
 			"date": 	time.Now().Unix(),
 		})
 	if err != nil {
-		log.Printf("Could not insert into reservations: %s", err.Error())
-		return p.RenderTemplate("errors/500.html")
+		log.Printf("Could not insert into posts: %s", err.Error())
+		p.Flash.Error(fmt.Sprintf("Couldn't create post: %s", err.Error()))
+		return p.RenderTemplate(routes.Posts.View())
 	}
+	p.Flash.Success("Post created!")
 	return p.Redirect(routes.Posts.View())
 }
 func (p Posts) Modify(id int) revel.Result {

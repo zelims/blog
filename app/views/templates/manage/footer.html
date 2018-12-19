@@ -2,6 +2,22 @@
     {{template "debug.html" .}}
 {{end}}
 </div>
+<div class="notify-alert" id="custom-notify">
+    <div class="row">
+        <div class="col">
+            <div id="notify-alert-scheme" class="media">
+                <i id="notify-alert-icon" class="fa align-self-center fa-2x m-3"aria-hidden="true"></i>
+                <div class="media-body bg-light p-4">
+                    <div class="row">
+                        <div class="col">
+                            <div id="notify-alert-text"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 
 <script src="/public/js/jquery.min.js"></script>
@@ -45,5 +61,10 @@
         });
 
     </script>
+{{ end }}
+
+
+{{ if .flash }}
+    {{ template "templates/manage/flash.html" . }}
 {{ end }}
 </html>
