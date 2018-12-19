@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/revel/revel"
+	"github.com/zelims/blog/app/models"
 	"github.com/zelims/blog/app/routes"
 )
 
@@ -11,6 +12,7 @@ type Manage struct {
 }
 
 func (c Manage) Index() revel.Result {
+	c.ViewArgs["postCount"] = models.SizeOfAllPosts()
 	return c.checkAuth("Manage/index.html")
 }
 

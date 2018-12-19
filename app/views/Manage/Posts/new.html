@@ -5,7 +5,7 @@
 {{ template "templates/manage/navigation.html" . }}
 
 <div class="content">
-    <form class="px-3 py-2" method="POST" action="{{ url "Posts.Create" }}">
+    <form method="POST" action="{{ url "Posts.Create" }}">
         <h3>New Post Entry</h3>
         <hr>
         {{ template "Manage/Posts/form.html" . }}

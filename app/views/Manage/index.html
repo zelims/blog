@@ -1,64 +1,41 @@
 {{ set . "title" "Manage" }}
 {{ set . "active" "dashboard" }}
+{{ append . "moreStyles" "vendor/jvectormap/jquery-jvectormap-2.0.3.css" }}
 {{ template "templates/manage/header.html" . }}
 {{ template "templates/manage/navigation.html" . }}
 
 <div class="content">
     <div class="row">
-        <div class="col-3">
-            <div class="notification-panel good"><i class="icon fa fa-check fa-3x"></i>
+        <div class="col-4">
+            <div class="notification-panel default"><i class="icon fa fa-check fa-3x"></i>
                 <div class="info">
-                    <h4>1000</h4>
-                    <p>Some good stat</p>
+                    <h4>{{ .postCount }}</h4>
+                    <p>Articles</p>
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <div class="notification-panel info"><i class="icon fa fa-server fa-3x"></i>
                 <div class="info">
                     <h4>1000</h4>
-                    <p>Require Updates</p>
+                    <p>Information</p>
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <div class="notification-panel warning"><i class="icon fa fa-exclamation-circle fa-3x"></i>
                 <div class="info">
-                    <h4>100</h4>
-                    <p>Issues</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="notification-panel error"><i class="icon fa fa-times fa-3x"></i>
-                <div class="info">
-                    <h4>10000</h4>
-                    <p>Some other stat</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-6">
-            <div class="notification-panel default"><i class="icon fa fa-exclamation-circle fa-3x"></i>
-                <div class="info">
-                    <h4>100</h4>
-                    <p>Issues</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="notification-panel default"><i class="icon fa fa-times fa-3x"></i>
-                <div class="info">
-                    <h4>10000</h4>
-                    <p>Some other stat</p>
+                    <h4>{NUM}</h4>
+                    <p>New Comments</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <div class="content">
-    test
+    <div id="visitor-map"></div>
 </div>
 {{/* TODO: Map showing visitors*/}}
+{{ append . "moreScripts" "vendor/jvectormap/jquery-jvectormap-2.0.3.min.js" }}
+{{ append . "moreScripts" "vendor/jvectormap/maps/world.js" }}
 {{ template "templates/manage/footer.html" . }}

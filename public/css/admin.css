@@ -7,7 +7,7 @@ body {
 .content {
     margin: 2.75rem;
     background: #fff;
-    padding: 1.25rem;
+    padding: 1.75rem 2.25rem;
 }
 
 .navbar {
@@ -236,4 +236,20 @@ body {
     border-bottom: 1px solid #bbb;
     padding-bottom: 0.25rem;
     margin-bottom: 1rem;
+}
+
+/*====================================
+ Visitors Map
+ ====================================*/
+#visitor-map {
+    height: 75vh;
+}
+#visitor-map .jvectormap-container {
+    width: 90%;
+    padding: 2rem 0;
+    margin: 0 auto;
+}
+#visitor-map .jvectormap-container svg {
+    width: 100%;
+    height: 100%;
 }
