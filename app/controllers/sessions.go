@@ -68,15 +68,17 @@ func (c Sessions) Login(username string, password string, rememberMe bool) revel
 	if user != nil {
 		c.Session["user"] = username
 		if rememberMe {
-			c.Session.SetDefaultExpiration()
-		} else {
 			c.Session.SetNoExpiration()
+		} else {
+			c.Session.SetDefaultExpiration()
 		}
 		c.Flash.Success("welcome " + strings.Title(username))
 		return c.Redirect(routes.Manage.Index())
 	}
 	c.Flash.Out["username"] = username
-
+	if rememberMe {
+		c.Flash.Out["rememberMe"] = "checked"
+	}
 	c.Flash.Error("Login Failed")
 	return c.Redirect(routes.Sessions.Index())
 }

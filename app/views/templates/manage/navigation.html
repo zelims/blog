@@ -62,13 +62,5 @@
 </nav>
 <div class="content-wrapper">
     <nav class="navbar navbar-light bg-light">
-        <li class="nav-item dropdown d-none d-lg-block ml-auto">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">{{ .username }}</a>
-            <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="{{ url "Sessions.Logout" }}">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                </a>
-            </div>
-        </li>
+        <li class="nav-item dropdown d-none d-lg-block ml-auto"><span class="mr-4">{{ .username }}</span></li>
     </nav>
