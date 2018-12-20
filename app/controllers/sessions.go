@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"crypto/sha256"
-	"database/sql"
 	"encoding/base64"
+	"fmt"
 	"github.com/revel/revel"
 	"github.com/zelims/blog/app"
 	"github.com/zelims/blog/app/models"
@@ -14,6 +14,15 @@ import (
 
 type Sessions struct {
 	*revel.Controller
+}
+
+type UserProfile struct {
+	Name		string
+	Location	string
+	About		string
+	Github		string
+	Twitter		string
+	Instagram	string
 }
 
 func (c Sessions) Index() revel.Result {
@@ -61,12 +70,12 @@ func (c Sessions) userLogin(username, password string) *models.User{
 }
 
 func (c Sessions) Edit() revel.Result {
-	row := app.DB.QueryRow("SELECT about FROM config")
-	about := ""
-	if err := row.Scan(&about); err != nil || err == sql.ErrNoRows {
-		c.Log.Error("Couldn't get about data: %s", err.Error())
+	var profile UserProfile
+	err := app.DB.Get(&profile, "SELECT * FROM config")
+	if err != nil {
+		log.Printf("Couldn't get about data: %s", err.Error())
 	}
-	c.ViewArgs["about"] = about
+	c.ViewArgs["profile"] = profile
 	return c.checkAuth("Sessions/edit.html")
 }
 
@@ -74,9 +83,17 @@ func (c Sessions) SaveProfile() revel.Result {
 	if !c.Authenticated() {
 		return c.Redirect(routes.Sessions.Index())
 	}
-	_, err := app.DB.Exec("UPDATE config SET about = ?", c.Params.Form.Get("about-user"))
+	_, err := app.DB.NamedExec(`UPDATE config SET name=:name,location=:loc,about=:about,github=:gh,twitter=:tw,instagram=:ig`,
+		map[string]interface{}{
+			"name": 		c.Params.Form.Get("user-name"),
+			"loc":	 		c.Params.Form.Get("user-location"),
+			"about": 		c.Params.Form.Get("user-about"),
+			"gh": 			c.Params.Form.Get("user-github"),
+			"tw":	 		c.Params.Form.Get("user-twitter"),
+			"ig": 			c.Params.Form.Get("user-instagram"),
+		})
 	if err != nil {
-		c.Flash.Error("Could not update profile [%s]", err.Error())
+		c.Flash.Error(fmt.Sprintf("Could not update profile - %s", err.Error()))
 		return c.Redirect(routes.Sessions.Edit())
 	}
 	c.Flash.Success("Updated profile!")

@@ -10,19 +10,27 @@
             <img src="/public/img/avatar.png" class="img-thumbnail" />
             <div class="row mt-3">
                 <div class="col-12">
-                    <h3 class="text-center">Zach Hosier</h3>
+                    <h3 class="text-center">{{ .profile.Name }}</h3>
                     <ul class="social-list list-unstyled">
-                        <li><i class="fas fa-map-marker-alt"></i> Colorado</li>
-                        <li><i class="fab fa-github"></i> <a href="https://github.com/zelims" target="_blank">zelims</a></li>
-                        <li><i class="fab fa-twitter"></i> <a href="https://twitter.com/_zmiles" target="_blank">_zelims</a></li>
-                        <li><i class="fab fa-instagram"></i> <a href="https://instagram.com/z.elims" target="_blank">z.elims</a></li>
+                        {{ if .profile.Location }}
+                            <li><i class="fas fa-map-marker-alt"></i> {{ .profile.Location }}</li>
+                        {{ end }}
+                        {{ if .profile.Github }}
+                            <li><i class="fab fa-github"></i> <a href="https://github.com/{{ .profile.Github }}" target="_blank">{{ .profile.Github }}</a></li>
+                        {{ end }}
+                        {{ if .profile.Twitter }}
+                            <li><i class="fab fa-twitter"></i> <a href="https://twitter.com/{{ .profile.Twitter }}" target="_blank">{{ .profile.Twitter }}</a></li>
+                        {{ end }}
+                        {{ if .profile.Instagram }}
+                            <li><i class="fab fa-instagram"></i> <a href="https://instagram.com/{{ .profile.Instagram }}" target="_blank">{{ .profile.Instagram }}</a></li>
+                        {{ end }}
                     </ul>
                 </div>
             </div>
         </div>
         <hr class="d-block d-md-none w-100">
         <div class="col-md-8 align-self-center">
-            {{ md .about }}
+            {{ md .profile.About }}
         </div>
     </div>
 </div>

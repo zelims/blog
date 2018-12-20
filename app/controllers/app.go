@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"database/sql"
 	"github.com/revel/revel"
 	"github.com/revel/revel/cache"
 	"github.com/zelims/blog/app"
@@ -41,12 +40,12 @@ func (c App) PagePosts() revel.Result {
 }
 
 func (c App) About() revel.Result {
-	row := app.DB.QueryRow("SELECT about FROM config")
-	about := ""
-	if err := row.Scan(&about); err != nil || err == sql.ErrNoRows {
-		c.Log.Error("Couldn't get about data: %s", err.Error())
+	var profile UserProfile
+	err := app.DB.Get(&profile, "SELECT * FROM config")
+	if err != nil {
+		log.Printf("Couldn't get about data: %s", err.Error())
 	}
-	return c.Render(about)
+	return c.Render(profile)
 }
 
 func (c App) Projects() revel.Result {
