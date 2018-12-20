@@ -1,0 +1,21 @@
+{{ set . "title" "Edit Profile" }}
+{{ set . "active" "profile" }}
+{{ append . "moreStyles" "css/simplemde.min.css" }}
+{{ template "templates/manage/header.html" . }}
+{{ template "templates/manage/navigation.html" . }}
+
+<div class="content">
+    <form method="POST" action="{{ url "Sessions.SaveProfile" }}">
+        <div class="form-group">
+            <label for="about-user">About</label>
+            <div id="about-editor">
+                <textarea id="about-user" name="about-user">{{ .about }}</textarea>
+            </div>
+        </div>
+        <hr>
+        <button type="submit" class="btn btn-success float-right"><i class="fas fa-save"></i> Save</button>
+        <div class="clearfix"></div>
+    </form>
+</div>
+{{ append . "moreScripts" "js/simplemde.min.js" }}
+{{ template "templates/manage/footer.html" . }}

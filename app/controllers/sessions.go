@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"crypto/sha256"
+	"database/sql"
 	"encoding/base64"
 	"github.com/revel/revel"
 	"github.com/zelims/blog/app"
@@ -60,7 +61,26 @@ func (c Sessions) userLogin(username, password string) *models.User{
 }
 
 func (c Sessions) Edit() revel.Result {
+	row := app.DB.QueryRow("SELECT about FROM config")
+	about := ""
+	if err := row.Scan(&about); err != nil || err == sql.ErrNoRows {
+		c.Log.Error("Couldn't get about data: %s", err.Error())
+	}
+	c.ViewArgs["about"] = about
 	return c.checkAuth("Sessions/edit.html")
+}
+
+func (c Sessions) SaveProfile() revel.Result {
+	if !c.Authenticated() {
+		return c.Redirect(routes.Sessions.Index())
+	}
+	_, err := app.DB.Exec("UPDATE config SET about = ?", c.Params.Form.Get("about-user"))
+	if err != nil {
+		c.Flash.Error("Could not update profile [%s]", err.Error())
+		return c.Redirect(routes.Sessions.Edit())
+	}
+	c.Flash.Success("Updated profile!")
+	return c.Redirect(routes.Sessions.Edit())
 }
 
 func (c Sessions) Login(username string, password string, rememberMe bool) revel.Result {
@@ -72,7 +92,7 @@ func (c Sessions) Login(username string, password string, rememberMe bool) revel
 		} else {
 			c.Session.SetDefaultExpiration()
 		}
-		c.Flash.Success("welcome " + strings.Title(username))
+		c.Flash.Success("Welcome " + strings.Title(username) + "!")
 		return c.Redirect(routes.Manage.Index())
 	}
 	c.Flash.Out["username"] = username

@@ -46,6 +46,15 @@
     });
 </script>
 {{ end }}
+{{ if eq .active "profile"}}
+<script>
+    let simplemde =new SimpleMDE({
+        element: $("#about-user")[0],
+        placeholder: "About you",
+        status: false,
+    });
+</script>
+{{ end }}
 {{ if or (eq .active "newpost") (eq .active "editpost") }}
     <script>
         $(function() {
