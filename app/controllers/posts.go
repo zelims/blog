@@ -62,6 +62,20 @@ func (p Posts) Modify(id int) revel.Result {
 	if !p.Authenticated() {
 		return p.Redirect(routes.Sessions.Index())
 	}
-	// do modify sql statements
+	_, err := app.DB.NamedExec(`UPDATE posts SET title=:title, content=:content, description=:desc, tags=:tags, last_update=:date WHERE id=:id`,
+		map[string]interface{}{
+			"id": 			id,
+			"title": 		p.Params.Form.Get("post-title"),
+			"content": 		p.Params.Form.Get("post-content"),
+			"desc": 		p.Params.Form.Get("post-description"),
+			"tags": 		p.Params.Form.Get("post-tags"),
+			"date": 		time.Now().Unix(),
+		})
+	if err != nil {
+		log.Printf("Could not update post %d: %s", id, err.Error())
+		p.Flash.Error(fmt.Sprintf("Couldn't modify post: %s", err.Error()))
+		return p.RenderTemplate(routes.Posts.View())
+	}
+	p.Flash.Success("Post successfully modified!")
 	return p.Redirect(routes.Posts.Edit(id))
 }
