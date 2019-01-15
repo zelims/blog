@@ -52,6 +52,9 @@ function switchPage(page) {
         success: function(data) {
             $('#curPage').val(page);
             $('#post-list').html(data);
+            $('html, body').animate({
+                scrollTop: $('.page-container').offset().top
+            }, 1000)
         },
         error: function(err, t, s) {
             alert("Failed to get data: " + err.responseText);
