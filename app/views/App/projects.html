@@ -4,21 +4,14 @@
 {{template "templates/navigation.html" .}}
 
 <div class="page-container">
-    {{ if .hadError }}
-        <div class="text-center">
-            <h3>{{ .hadError }}</h3>
-            <span>Please try again later</span>
+    <div id="github">
+        <div class="loading">
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
         </div>
-    {{ else }}
-        <div id="github">
-            <div class="loading">
-                <div class="loading-bar"></div>
-                <div class="loading-bar"></div>
-                <div class="loading-bar"></div>
-                <div class="loading-bar"></div>
-            </div>
-        </div>
-    {{ end }}
+    </div>
 </div>
 
 {{template "templates/footer.html" .}}

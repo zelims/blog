@@ -34,7 +34,6 @@
               method: "post",
               success: function(data) {
                   $('#github').html(data);
-                  new GitHubCalendar(".calendar", "zelims");
               },
               error: function(err, t, s) {
                   // TODO: BS4 Modal

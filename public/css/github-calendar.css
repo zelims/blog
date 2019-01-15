@@ -6,12 +6,28 @@
     margin: 0 auto;
 }
 
+.calendar svg {
+    height: 600px;
+}
+
 .calendar-graph text.wday,
 .calendar-graph text.month {
     font-size: 10px;
     fill: #aaa;
 }
 
+.calendar .border {
+    border: none!important;
+}
+
+.calendar h2 {
+    margin: 2rem 0;
+    font-size: 1.5rem;
+}
+
+.contrib-footer .float-left {
+    display: none!important;
+}
 .contrib-legend {
     text-align: right;
     padding: 0 14px 10px 0;

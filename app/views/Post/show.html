@@ -6,18 +6,18 @@
 <div class="page-container">
     <div class="row">
         <div class="col-12">
-            <h3>{{ .post.Title }}</h3>
-            <small class="text-muted">By <b>{{ .post.Author }}</b> on {{ .post.Date }}
-            {{ if .post.Updated }}
-                | Updated on {{ .post.Updated }}
-            {{ end }}
-            </small>
-            <hr>
-            <div class="p-2">
+            <div class="px-3 py-2">
+                <h2>{{ .post.Title }}</h2>
+                <small class="text-muted">By <b>{{ .post.Author }}</b> on {{ .post.Date }}
+                {{ if .post.Updated }}
+                    | Updated on {{ .post.Updated }}
+                {{ end }}
+                </small>
+                <hr>
                 {{ md .post.Content }}
+                <hr>
+                <p>{{ printtags .post.TagArr true }}</p>
             </div>
-            <hr>
-            <p>{{ printtags .post.TagArr true }}</p>
         </div>
     </div>
 </div>

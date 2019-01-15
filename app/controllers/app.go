@@ -1,12 +1,16 @@
 package controllers
 
 import (
+	"github.com/google/go-github/github"
 	"github.com/revel/revel"
+	"github.com/revel/revel/cache"
 	"github.com/zelims/blog/app"
 	"github.com/zelims/blog/app/models"
+	"html/template"
 	"log"
 	"math"
 	"strconv"
+	"time"
 )
 
 type App struct {
@@ -23,7 +27,10 @@ func (c App) Index() revel.Result {
 
 	pagen := &Pagination{int(math.Ceil(float64(size) / 8)) }
 	pageNum := 1
-	return c.Render(posts, pagen, pageNum)
+	c.ViewArgs["posts"] = posts
+	c.ViewArgs["pagen"] = pagen
+	c.ViewArgs["pageNum"] = pageNum
+	return c.Render()
 }
 
 func (c App) PagePosts() revel.Result {
@@ -39,39 +46,64 @@ func (c App) PagePosts() revel.Result {
 
 func (c App) About() revel.Result {
 	var profile UserProfile
-	err := app.DB.Get(&profile, "SELECT name,location,about,github,twitter,instagram FROM config")
-	if err != nil {
-		log.Printf("Couldn't get about data: %s", err.Error())
+	if err := cache.Get("profile", &profile); err != nil {
+		err := app.DB.Get(&profile, "SELECT * FROM config")
+		if err != nil {
+			log.Printf("Couldn't get about data: %s", err.Error())
+		}
+		go func() {
+			err = cache.Set("profile", profile, 15*time.Minute)
+			if err != nil {
+				log.Printf("Error caching profile: %s", err.Error())
+			}
+		}()
 	}
-	return c.Render(profile)
+	c.ViewArgs["profile"] = profile
+	return c.Render()
 }
 
 func (c App) Projects() revel.Result {
 	return c.Render()
 }
+
 func (c App) GitHub() revel.Result {
-	// Get github calendar and data
-	/*if err := cache.Get("github", &github); err != nil {
-
-	}*/
-	repos := models.GithubData()
-	c.ViewArgs["repos"] = repos
-
-
-	// get public github repos
-	/*var repos []models.RepositoryData
-	if err := cache.Get("repos", &repos); err != nil {
-		repos = models.Repositories()
-		if repos == nil {
-			hadError := "Failed to fetch GitHub data"
-			return c.Render(repos, hadError)
+	var githubUsername string
+	if err := cache.Get("githubUsername", &githubUsername); err != nil {
+		err := app.DB.Get(&githubUsername, "SELECT github FROM config")
+		if err != nil {
+			log.Printf("[!] Could not get Github username (%s)", err.Error())
 		}
+		go func() {
+			err = cache.Set("githubUsername", githubUsername, 10*time.Minute)
+			if err != nil {
+				log.Printf("Error Caching GH Username: %s", err.Error())
+			}
+		}()
+	}
+
+	var repos []*github.Repository
+	if err := cache.Get("github", &repos); err != nil {
+		repos = models.GithubData()
 		go func() {
 			err = cache.Set("repos", repos, 10*time.Minute)
 			if err != nil {
 				log.Printf("Error Caching Repos: %s", err.Error())
 			}
 		}()
-	}*/
+	}
+
+	var calendar template.HTML
+	if err := cache.Get("github-calendar", &calendar); err != nil {
+		calendar = models.GithubCalendar(githubUsername)
+		go func() {
+			err = cache.Set("github-calendar", calendar, 10*time.Minute)
+			if err != nil {
+				log.Printf("Error Caching Calendar: %s", err.Error())
+			}
+		}()
+	}
+
+	c.ViewArgs["calendar"] = calendar
+	c.ViewArgs["repos"] = repos
 	return c.RenderTemplate("App/ajax_data/github.html")
 }

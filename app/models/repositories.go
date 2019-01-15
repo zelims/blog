@@ -2,9 +2,11 @@ package models
 
 import (
 	"context"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/google/go-github/github"
 	"github.com/zelims/blog/app"
 	"golang.org/x/oauth2"
+	"html/template"
 	"log"
 	"net/http"
 	"sort"
@@ -20,7 +22,7 @@ type repoData []*github.Repository
 
 func GithubAuthentication() {
 	githubContext = context.Background()
-	row := app.DB.QueryRow("SELECT `github_token` FROM config")
+	row := app.DB.QueryRow("SELECT `github` FROM tokens")
 	var token string
 	err := row.Scan(&token)
 	if err != nil {
@@ -30,6 +32,25 @@ func GithubAuthentication() {
 	ts := oauth2.StaticTokenSource( &oauth2.Token{ AccessToken: token }, )
 	httpClient = oauth2.NewClient(githubContext, ts)
 	githubClient = github.NewClient(httpClient)
+}
+
+func GithubCalendar(username string) template.HTML {
+	response, err := http.Get("https://github.com/" + username)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer response.Body.Close()
+
+	document, err := goquery.NewDocumentFromReader(response.Body)
+	if err != nil {
+		log.Fatal("Error loading HTTP response body. ", err)
+	}
+
+	out, err := document.Find(".js-yearly-contributions").Html()
+	if err != nil {
+		log.Printf("[!] Error getting Github calendar for %s (%s)", username, err.Error())
+	}
+	return template.HTML(out)
 }
 
 func GithubData() []*github.Repository {
