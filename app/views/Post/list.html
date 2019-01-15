@@ -3,16 +3,13 @@
         <div class="col-12">
             <div class="card">
                 <div class="post card-body">
-                    <h4 class="float-left post-title"><a href="/post/{{ $key.ID }}">{{ $key.Title }}</a></h4>
-                    <div class="float-right">
-                        <small><i class="fas fa-clock"></i> <span class="text-muted">{{ $key.Date }}</span></small>
-                        <br>
-                        <small><i class="fas fa-tags"></i>
-                            {{ range $index, $tag := $key.TagArr }}
-                                {{if $index}},{{end}}
-                                <a href="/tag/{{ $tag }}">{{ $tag }}</a>
-                            {{ end }}
-                        </small>
+                    <div class="row">
+                        <h4 class="col-9 post-title"><a href="/post/{{ $key.ID }}">{{ $key.Title }}</a></h4>
+                        <div class="col-3">
+                            <small><i class="fas fa-clock"></i> <span class="text-muted">{{ $key.Date }}</span></small>
+                            <br>
+                            {{ printtags $key.TagArr false }}
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                     <hr>

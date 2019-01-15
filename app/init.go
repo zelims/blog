@@ -46,7 +46,23 @@ func setupTemplateFuncs() {
 		itoa := strconv.Itoa(i)
 		return str == itoa
 	}
-
+	revel.TemplateFuncs["arrsize"] = func(strs []string) int {
+		return len(strs)
+	}
+	revel.TemplateFuncs["printtags"] = func(tags []string, all bool) template.HTML {
+		output := "<small><i class=\"fas fa-tags\"></i>  "
+		for i, tag := range tags {
+			if i < len(tags) && i != 0 {
+				output += ", "
+			}
+			output += fmt.Sprintf("<a href=\"/tag/%s\">%s</a>", tag, tag)
+			if i == 2 && !all {
+				break
+			}
+		}
+		output += "</small>"
+		return template.HTML(output)
+	}
 	revel.TemplateFuncs["md"] = func(str string) template.HTML {
 		return template.HTML(string(blackfriday.MarkdownCommon([]byte(str))))
 	}
