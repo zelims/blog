@@ -11,6 +11,7 @@ GET     /                                       App.Index
 POST    /page/:num                              App.PagePosts
 GET     /about                                  App.About
 GET     /projects                               App.Projects
+POST    /repos                                  App.Repositories
 
 # Blog Post Routes
 GET     /post/:id                               Post.Show

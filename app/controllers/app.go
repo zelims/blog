@@ -49,6 +49,9 @@ func (c App) About() revel.Result {
 }
 
 func (c App) Projects() revel.Result {
+	return c.Render()
+}
+func (c App) Repositories() revel.Result {
 	var repos []models.RepositoryData
 	if err := cache.Get("repos", &repos); err != nil {
 		repos = models.Repositories()

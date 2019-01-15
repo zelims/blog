@@ -78,6 +78,7 @@ function switchPage(page) {
             }, 1000)
         },
         error: function(err, t, s) {
+            // TODO: BS4 Modal
             alert("Failed to get data: " + err.responseText);
         }
     });

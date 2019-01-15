@@ -15,7 +15,7 @@
   <script src="/public/js/custom.js"></script>
 
   {{range .moreScripts}}
-      <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
+      <script src="/public/js/{{.}}" type="text/javascript" charset="utf-8"></script>
   {{end}}
   {{ if eq .active "home" }}
       <script>
@@ -28,6 +28,18 @@
       </script>
   {{ end }}
   {{ if eq .active "projects" }}
-      <script> new GitHubCalendar(".calendar", "zelims"); </script>
+      <script> new GitHubCalendar(".calendar", "zelims");
+          $.ajax({
+              url: "/repos",
+              method: "post",
+              success: function(data) {
+                  $('#repo-list').html(data);
+              },
+              error: function(err, t, s) {
+                  // TODO: BS4 Modal
+                  alert("Failed to get data: " + err.responseText);
+              }
+          });
+      </script>
   {{ end }}
 </html>
