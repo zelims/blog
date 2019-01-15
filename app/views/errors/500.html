@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>Application error</title>
-	</head>
-	<body>
-		{{if eq .RunMode "dev"}}
-		{{template "errors/500-dev.html" .}}
-		{{else}}
-		<h1>Oops, an error occured</h1>
+<html lang="en">
+<head>
+	<title>500 - Application Error</title>
+	<link rel="stylesheet" href="/public/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/public/css/error.css" />
+</head>
+<body>
+<div class="error-page">
+	<div class="inner">
+		<h1>Oops, an error has occurred</h1>
 		<p>
-			This exception has been logged.
+			This exception has been logged, and the developers have been notified.
 		</p>
-		{{end}}
-	</body>
+		<p>
+			<a href="/" class="btn btn-light btn-lg mt-3">Take me home!</a>
+		</p>
+	</div>
+</div>
+</body>
 </html>

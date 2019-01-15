@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Not found</title>
-	</head>
-	<body>
-{{if eq .RunMode "dev"}}
-{{template "errors/404-dev.html" .}}
-{{else}}
-	{{with .Error}}
-	<h1>
-		{{.Title}}
-	</h1>
-	<p>
-		{{.Description}}
-	</p>
-	{{end}}
-{{end}}
-	</body>
+<head>
+	<title>404 - Not Found</title>
+	<link rel="stylesheet" href="/public/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/public/css/error.css" />
+</head>
+<body>
+<div class="error-page">
+	<div class="inner">
+		{{with .Error}}
+			<h1>
+				404 Not Found
+			</h1>
+			<p>
+				{{.Description}}
+			</p>
+		{{end}}
+		<p>
+			<a href="/" class="btn btn-light btn-lg mt-3">Take me home!</a>
+		</p>
+	</div>
+</div>
+</body>
 </html>
