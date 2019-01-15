@@ -16,9 +16,10 @@ type Post struct {
 	Content				string
 	Description			string
 	Tags				string
-	TagArr 				[]string `db:"-"`
-	TagsValue			string	 `db:"-"`
+	TagArr 				[]string 	`db:"-"`
+	TagsValue			string	 	`db:"-"`
 	Date				string
+	Updated				*string		`db:"last_update"`
 }
 
 func SizeOfAllPosts() int {
@@ -45,7 +46,7 @@ func AllPosts() []*Post {
 	for query.Next() {
 		curPost := &Post{}
 		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
-			&curPost.Description, &curPost.Tags, &curPost.Date); err != nil {
+			&curPost.Description, &curPost.Tags, &curPost.Date, &curPost.Updated); err != nil {
 			log.Printf("[!] Error scanning post: %s", err.Error())
 		}
 		curPost.Format()
@@ -63,7 +64,7 @@ func Posts(offset int) ([]*Post, int) {
 	for query.Next() {
 		curPost := &Post{}
 		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
-			&curPost.Description, &curPost.Tags, &curPost.Date); err != nil {
+			&curPost.Description, &curPost.Tags, &curPost.Date, &curPost.Updated); err != nil {
 			log.Printf("[!] Error scanning post: %s", err.Error())
 		}
 		curPost.Format()
@@ -82,6 +83,11 @@ func (p *Post) formatDate() {
 	convStr, _ := strconv.ParseInt(p.Date, 10, 64)
 	// setting the data from the convStr to the proper format
 	p.Date = time.Unix(convStr, 0).Format("2 Jan 2006 at 3:04pm MST") //time.RFC1123
+
+	if p.Updated != nil {
+		convStr, _ = strconv.ParseInt(*p.Updated, 10, 64)
+		*p.Updated = time.Unix(convStr, 0).Format("2 Jan 2006 at 3:04pm MST") //time.RFC1123
+	}
 }
 
 func (p *Post) formatTags() {

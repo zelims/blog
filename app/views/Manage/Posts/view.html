@@ -13,6 +13,7 @@
             <th>Author</th>
             <th>Tags</th>
             <th>Date</th>
+            <th>Last Updated</th>
             <th></th>
         </tr>
         {{ range .posts }}
@@ -22,6 +23,11 @@
                 <td>{{ .Author }}</td>
                 <td>{{ .TagsValue }}</td>
                 <td>{{ .Date }}</td>
+                <td>{{ if .Updated }}
+                    {{ .Updated }}
+                {{ else }}
+                    n/a
+                {{ end }}</td>
                 <td><a href="{{ url "Posts.Edit" .ID }}" class="btn btn-primary btn-block">Edit</a></td>
             </tr>
         {{ end }}

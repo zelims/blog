@@ -41,13 +41,14 @@ func (p Posts) Create() revel.Result {
 	_, err := app.DB.NamedExec(`INSERT INTO posts (ID, author, title, content, description, tags, date)` +
 		` VALUES (:id,:author,:title,:content,:desc,:tags,:date)`,
 		map[string]interface{}{
-			"id": 		nil,
-			"author": 	p.currentUser().Username,
-			"title": 	p.Params.Form.Get("post-title"),
-			"content": 	p.Params.Form.Get("post-content"),
-			"desc": 	p.Params.Form.Get("post-description"),
-			"tags": 	p.Params.Form.Get("post-tags"),
-			"date": 	time.Now().Unix(),
+			"id": 			nil,
+			"author": 		p.currentUser().Username,
+			"title": 		p.Params.Form.Get("post-title"),
+			"content": 		p.Params.Form.Get("post-content"),
+			"desc": 		p.Params.Form.Get("post-description"),
+			"tags": 		p.Params.Form.Get("post-tags"),
+			"date": 		time.Now().Unix(),
+			"last_update":  nil,
 		})
 	if err != nil {
 		log.Printf("Could not insert into posts: %s", err.Error())
