@@ -28,16 +28,17 @@
       </script>
   {{ end }}
   {{ if eq .active "projects" }}
-      <script> new GitHubCalendar(".calendar", "zelims");
+      <script>
           $.ajax({
-              url: "/repos",
+              url: "/github",
               method: "post",
               success: function(data) {
-                  $('#repo-list').html(data);
+                  $('#github').html(data);
+                  new GitHubCalendar(".calendar", "zelims");
               },
               error: function(err, t, s) {
                   // TODO: BS4 Modal
-                  alert("Failed to get data: " + err.responseText);
+                  showNotifyAlert(null, "custom-notify", "Failed to get Github Data", "error");
               }
           });
       </script>

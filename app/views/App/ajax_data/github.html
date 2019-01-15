@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-12">
+        <div class="calendar">
+            <div class="loading">
+                <div class="loading-bar"></div>
+                <div class="loading-bar"></div>
+                <div class="loading-bar"></div>
+                <div class="loading-bar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-bordered table-responsive mt-5" id="repo-table">
+    <thead>
+    <td></td>
+    <td>Name</td>
+    <td>Language</td>
+    <td>Description</td>
+    <td>Last Commit</td>
+    <td>Issues</td>
+    </thead>
+    {{ range .repos }}
+        <tr>
+            <td><a target="_blank" href="http://github.com/{{ .Owner.Login }}"><img class="repo-thumbnail" src="{{ .Owner.AvatarURL }}" alt="{{ .Owner.Login }} profile picture" /></a></td>
+            <td><a target="_blank" href="http://github.com/{{ .Owner.Login }}/{{ .Name }}">{{ .Name }}</a></td>
+            <td>{{ .Language }}</td>
+            <td>{{ if .Description }}
+                {{ .Description }}
+            {{ else }}
+                n/a
+            {{ end }}</td>
+            <td class="nowrap">{{ time_format .UpdatedAt }}</td>
+            <td class="text-center">{{ .OpenIssuesCount }}</td>
+        </tr>
+    {{ end }}
+</table>

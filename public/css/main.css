@@ -28,16 +28,9 @@ input#postSearch:focus {
     width: 18px;
 }
 
-/*#banner {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 20em;
-    background: no-repeat center url('/public/img/banner.jpg');
-    background-size: cover;
-    z-index: -1;
-}*/
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
 header.page-header {
     position: relative;
     width: 100%;
@@ -292,9 +285,13 @@ ul a:focus {
 }
 
 /** @Repo **/
-
 .repo-row:not(:first-child) {
     margin-top: 1.5rem;
+}
+
+.repo-thumbnail {
+    width: 32px;
+    height: 32px;
 }
 
 .repo {

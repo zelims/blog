@@ -2,13 +2,11 @@ package controllers
 
 import (
 	"github.com/revel/revel"
-	"github.com/revel/revel/cache"
 	"github.com/zelims/blog/app"
 	"github.com/zelims/blog/app/models"
 	"log"
 	"math"
 	"strconv"
-	"time"
 )
 
 type App struct {
@@ -41,7 +39,7 @@ func (c App) PagePosts() revel.Result {
 
 func (c App) About() revel.Result {
 	var profile UserProfile
-	err := app.DB.Get(&profile, "SELECT * FROM config")
+	err := app.DB.Get(&profile, "SELECT name,location,about,github,twitter,instagram FROM config")
 	if err != nil {
 		log.Printf("Couldn't get about data: %s", err.Error())
 	}
@@ -51,8 +49,17 @@ func (c App) About() revel.Result {
 func (c App) Projects() revel.Result {
 	return c.Render()
 }
-func (c App) Repositories() revel.Result {
-	var repos []models.RepositoryData
+func (c App) GitHub() revel.Result {
+	// Get github calendar and data
+	/*if err := cache.Get("github", &github); err != nil {
+
+	}*/
+	repos := models.GithubData()
+	c.ViewArgs["repos"] = repos
+
+
+	// get public github repos
+	/*var repos []models.RepositoryData
 	if err := cache.Get("repos", &repos); err != nil {
 		repos = models.Repositories()
 		if repos == nil {
@@ -65,6 +72,6 @@ func (c App) Repositories() revel.Result {
 				log.Printf("Error Caching Repos: %s", err.Error())
 			}
 		}()
-	}
-	return c.Render(repos)
+	}*/
+	return c.RenderTemplate("App/ajax_data/github.html")
 }

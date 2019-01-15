@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/go-github/github"
 	"github.com/jmoiron/sqlx"
 	"github.com/revel/revel"
 	"github.com/russross/blackfriday"
@@ -85,6 +86,9 @@ func setupTemplateFuncs() {
 			close(stream)
 		}()
 		return
+	}
+	revel.TemplateFuncs["time_format"] = func(t *github.Timestamp) string {
+		return t.Format("02 Jan 2006 15:04")
 	}
 }
 
