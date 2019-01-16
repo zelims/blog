@@ -70,12 +70,19 @@ func setupTemplateFuncs() {
 	revel.TemplateFuncs["html"] = func(str string) template.HTML {
 		return template.HTML(str)
 	}
-	revel.TemplateFuncs["bannerImg"] = func(id int) template.HTML {
-		img := fmt.Sprintf("/public/img/posts/%d/banner.jpg", id)
+	revel.TemplateFuncs["bannerImg"] = func(id int, imgName string) template.HTML {
+		img := fmt.Sprintf("/public/img/posts/%d/%s", id, imgName)
 		if _, err := os.Stat(revel.BasePath + img); err != nil {
 			return ""
 		}
 		return template.HTML("<style>header.page-header::before { background: no-repeat center url(" + img + ");}</style>")
+	}
+	revel.TemplateFuncs["printImages"] = func(images []string) template.HTML {
+		out := "printing the beautiful images"
+		// loop through images
+			// output img tag
+
+		return template.HTML(out)
 	}
 	revel.TemplateFuncs["pagination"] = func(n int)  (stream chan int){
 		stream = make(chan int)

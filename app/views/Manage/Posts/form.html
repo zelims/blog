@@ -19,3 +19,19 @@
     <input type="text" class="form-control" id="post-tags" name="post-tags" aria-describedby="tagHelp" value="{{ .Tags }}" />
     <small id="tagHelp" class="form-text text-muted">Separate words by commas</small>
 </div>
+<hr>
+<div class="form-group">
+    <label for="post-images">Post Images</label>
+    {{ if .Images }}
+        {{ printImages .Images }}
+    {{ end }}
+    <input type="file" class="form-control-file" id="post-images" name="post-images" />
+</div>
+<hr>
+<div class="form-group">
+    <label for="post-banner">Banner Image</label>
+    {{ if .Banner }}
+        <img src="/public/img/posts/{{ .ID }}/{{ .Banner }}" alt="" class="post-banner-thumbnail" />
+    {{ end }}
+    <input type="file" class="form-control-file" id="post-banner" name="post-banner" />
+</div>

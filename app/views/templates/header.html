@@ -19,7 +19,7 @@
     {{end}}
 
     {{ if eq .active "post" }}
-      {{ bannerImg .post.ID }}
+      {{ bannerImg .post.ID .post.Banner }}
     {{ end }}
   </head>
   <body>

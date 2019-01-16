@@ -18,6 +18,8 @@ type Post struct {
 	Tags				string
 	TagArr 				[]string 	`db:"-"`
 	TagsValue			string	 	`db:"-"`
+	Banner				string
+	Images				string
 	Date				string
 	Updated				*string		`db:"last_update"`
 }
@@ -46,7 +48,7 @@ func AllPosts() []*Post {
 	for query.Next() {
 		curPost := &Post{}
 		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
-			&curPost.Description, &curPost.Tags, &curPost.Date, &curPost.Updated); err != nil {
+			&curPost.Description, &curPost.Tags, &curPost.Banner, &curPost.Images, &curPost.Date, &curPost.Updated); err != nil {
 			log.Printf("[!] Error scanning post: %s", err.Error())
 		}
 		curPost.Format()
@@ -64,7 +66,7 @@ func Posts(offset int) ([]*Post, int) {
 	for query.Next() {
 		curPost := &Post{}
 		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
-			&curPost.Description, &curPost.Tags, &curPost.Date, &curPost.Updated); err != nil {
+			&curPost.Description, &curPost.Tags, &curPost.Banner, &curPost.Images, &curPost.Date, &curPost.Updated); err != nil {
 			log.Printf("[!] Error scanning post: %s", err.Error())
 		}
 		curPost.Format()
