@@ -55,6 +55,22 @@
     });
 </script>
 {{ end }}
+{{ if eq .active "posts" }}
+    <script>
+    $(document).ready(function() {
+        let dTable = $('#post-list-table').DataTable({
+            "order": [[ 0, "desc" ]],
+            "autoWidth": false,
+            "bLengthChange": false,
+            "bSearch": false,
+            dom: "tip",
+        });
+        $('#postTableSearch').keyup(function(){
+            dTable.search(this.value).draw();
+        });
+    } );
+    </script>
+{{ end }}
 {{ if or (eq .active "newpost") (eq .active "editpost") }}
     <script>
         $(function() {

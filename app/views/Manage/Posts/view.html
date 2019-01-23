@@ -4,19 +4,36 @@
 {{ template "templates/manage/navigation.html" . }}
 
 <div class="content">
-    <h3 class="ml-2">All Posts</h3>
+    <div class="row">
+        <div class="col-8">
+            <h3 class="ml-2">All Posts</h3>
+        </div>
+        <div class="col-4 float-right">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <input type="text" class="form-control" id="postTableSearch" placeholder="Search..." autocomplete="off"/>
+            </div>
+        </div>
+    </div>
     <hr>
-    <table class="table table-bordered">
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Tags</th>
-            <th>Date</th>
-            <th>Last Updated</th>
-            <th></th>
-        </tr>
-        {{ range .posts }}
+    <table class="table table-bordered" id="post-list-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Tags</th>
+                <th>Date</th>
+                <th>Last Updated</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .posts }}
             <tr>
                 <td>{{ .ID }}</td>
                 <td>{{ .Title }}</td>
@@ -30,7 +47,8 @@
                 {{ end }}</td>
                 <td><a href="{{ url "Posts.Edit" .ID }}" class="btn btn-primary btn-block">Edit</a></td>
             </tr>
-        {{ end }}
+            {{ end }}
+        </tbody>
     </table>
 </div>
 {{ template "templates/manage/footer.html" . }}
