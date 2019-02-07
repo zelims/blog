@@ -11,6 +11,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -38,27 +39,56 @@ func (p Posts) Edit(id int) revel.Result {
 	return p.checkAuth("Manage/Posts/edit.html")
 }
 
+func checkURLExists(url string) int {
+	count := 0
+	err := app.DB.QueryRow("SELECT COUNT(*) FROM posts WHERE friendly_url = ?", url).Scan(&count)
+	if err != nil {
+		log.Printf("Could not query row %s", err.Error())
+		return -1
+	}
+	return count
+}
+
 func (p Posts) Create() revel.Result {
 	if !p.Authenticated() {
 		return p.Redirect(routes.Sessions.Index())
 	}
-	_, err := app.DB.NamedExec(`INSERT INTO posts (ID, author, title, content, description, tags, date)` +
-		` VALUES (:id,:author,:title,:content,:desc,:tags,:date)`,
+	postTitle := p.Params.Form.Get("post-title")
+
+	titleLen := len(postTitle)
+	if titleLen > 64 {
+		titleLen = 64
+	}
+	log.Printf("%d", titleLen)
+	friendlyURL := strings.Replace(postTitle[0:titleLen], " ", "-", -1)
+	log.Printf("%s || %s", postTitle[0:titleLen], friendlyURL)
+	count := checkURLExists(friendlyURL)
+	if count > 0 {
+		friendlyURL = fmt.Sprintf("%s-%d", friendlyURL, count+1)
+	}
+
+	log.Printf("friendlyURL: %s", friendlyURL)
+
+	/*_, err := app.DB.NamedExec(`INSERT INTO posts (ID, author, title, content, description, friendly_url, tags, banner, images, date)` +
+		` VALUES (:id,:author,:title,:content,:desc,:url,:tags,:banner,:images,:date)`,
 		map[string]interface{}{
-			"id":          nil,
-			"author":      p.currentUser().Username,
-			"title":       p.Params.Form.Get("post-title"),
-			"content":     p.Params.Form.Get("post-content"),
-			"desc":        p.Params.Form.Get("post-description"),
-			"tags":        p.Params.Form.Get("post-tags"),
-			"date":        time.Now().Unix(),
-			"last_update": nil,
+			"id":          	nil,
+			"author":      	p.currentUser().Username,
+			"title":       	postTitle,
+			"content":     	p.Params.Form.Get("post-content"),
+			"desc":        	p.Params.Form.Get("post-description"),
+			"url":		   	friendlyURL,
+			"tags":        	p.Params.Form.Get("post-tags"),
+			"banner":		"",
+			"images":		"",
+			"date":        	time.Now().Unix(),
+			"last_update": 	nil,
 		})
 	if err != nil {
 		log.Printf("Could not insert into posts: %s", err.Error())
 		p.Flash.Error(fmt.Sprintf("Couldn't create post: %s", err.Error()))
 		return p.RenderTemplate(routes.Posts.View())
-	}
+	}*/
 	p.Flash.Success("Post created!")
 	return p.Redirect(routes.Posts.View())
 }
@@ -86,7 +116,7 @@ func (p Posts) Modify(id int) revel.Result {
 		defer file.Close()
 
 		if valid, fname := p.HandleImageUpload(file, handle, id); valid == true {
-			query += "banner=:banner"
+			query += ",banner=:banner"
 			queryData["banner"] = fname
 			log.Printf("Updated banner: %s", queryData)
 		} else {
@@ -120,15 +150,6 @@ const (
 	MB
 	GB
 )
-
-type FileInfo struct {
-	ContentType string
-	Filename    string
-	RealFormat  string `json:",omitempty"`
-	Resolution  string `json:",omitempty"`
-	Size        int
-	Status      string `json:",omitempty"`
-}
 
 func (p Posts) HandleImageUpload(file multipart.File, handle *multipart.FileHeader, id int) (bool, string) {
 	p.Validation.Required(file)

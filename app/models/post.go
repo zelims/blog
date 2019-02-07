@@ -15,6 +15,7 @@ type Post struct {
 	Title				string
 	Content				string
 	Description			string
+	URL					string		`db:"friendly_url"`
 	Tags				string
 	TagArr 				[]string 	`db:"-"`
 	TagsValue			string	 	`db:"-"`
@@ -22,6 +23,15 @@ type Post struct {
 	Images				string
 	Date				string
 	Updated				*string		`db:"last_update"`
+}
+
+type FileInfo struct {
+	ContentType string
+	Filename    string
+	RealFormat  string `json:",omitempty"`
+	Resolution  string `json:",omitempty"`
+	Size        int
+	Status      string `json:",omitempty"`
 }
 
 func SizeOfAllPosts() int {
@@ -41,38 +51,28 @@ func PostByID(id int) (post Post, err error) {
 
 func AllPosts() []*Post {
 	allPosts := make([]*Post, 0)
-	query, err := app.DB.Query("SELECT * FROM posts ORDER BY date DESC")
+	err := app.DB.Select(&allPosts,"SELECT * FROM posts ORDER BY date DESC")
 	if err != nil {
-		log.Printf("Error getting posts: %s", err.Error())
+		log.Printf("AllPosts(): %s", err.Error())
 	}
-	for query.Next() {
-		curPost := &Post{}
-		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
-			&curPost.Description, &curPost.Tags, &curPost.Banner, &curPost.Images, &curPost.Date, &curPost.Updated); err != nil {
-			log.Printf("[!] Error scanning post: %s", err.Error())
-		}
-		curPost.Format()
-		allPosts = append(allPosts, curPost)
-	}
+	formatPosts(allPosts)
 	return allPosts
 }
 
 func Posts(offset int) ([]*Post, int) {
 	posts := make([]*Post, 0)
-	query, err := app.DB.Query("SELECT * FROM posts ORDER BY date DESC LIMIT ?, 8", (offset - 1) * 8)
+	err := app.DB.Select(&posts,"SELECT * FROM posts ORDER BY date DESC LIMIT ?, 8", (offset - 1) * 8)
 	if err != nil {
-		log.Printf("Error getting posts: %s", err.Error())
+		log.Printf("Posts(%d): %s", offset, err.Error())
 	}
-	for query.Next() {
-		curPost := &Post{}
-		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
-			&curPost.Description, &curPost.Tags, &curPost.Banner, &curPost.Images, &curPost.Date, &curPost.Updated); err != nil {
-			log.Printf("[!] Error scanning post: %s", err.Error())
-		}
-		curPost.Format()
-		posts = append(posts, curPost)
-	}
+	formatPosts(posts)
 	return posts, SizeOfAllPosts()
+}
+
+func formatPosts(posts []*Post) {
+	for _, p := range posts {
+		p.Format()
+	}
 }
 
 func (p *Post) Format() {

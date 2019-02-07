@@ -10,11 +10,12 @@ module:testrunner
 GET     /                                       App.Index
 POST    /page/:num                              App.PagePosts
 GET     /about                                  App.About
+GET     /repositories                           App.Repositories
 GET     /projects                               App.Projects
 POST    /github                                 App.GitHub
 
 # Blog Post Routes
-GET     /post/:id                               Post.Show
+GET     /post/:url                              Post.Show
 GET     /tag/:tag                               Post.Keywords
 POST    /search                                 Post.Search
 

@@ -1,6 +1,3 @@
-  {{if .DevMode}}
-    {{template "debug.html" .}}
-  {{end}}
   <footer>
       <span>Copyright &copy; 2018 Zach H.</span>
   </footer>
@@ -27,7 +24,7 @@
           });
       </script>
   {{ end }}
-  {{ if eq .active "projects" }}
+  {{ if eq .active "repositories" }}
       <script>
           $.ajax({
               url: "/github",

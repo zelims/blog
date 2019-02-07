@@ -17,15 +17,10 @@ type App struct {
 	*revel.Controller
 }
 
-type Pagination struct {
-	Pages		int
-
-}
-
 func (c App) Index() revel.Result {
 	posts, size := models.Posts(1)
 
-	pagen := &Pagination{int(math.Ceil(float64(size) / 8)) }
+	pagen := &models.Pagination{int(math.Ceil(float64(size) / 8)) }
 	pageNum := 1
 	c.ViewArgs["posts"] = posts
 	c.ViewArgs["pagen"] = pagen
@@ -45,7 +40,7 @@ func (c App) PagePosts() revel.Result {
 }
 
 func (c App) About() revel.Result {
-	var profile UserProfile
+	var profile models.UserProfile
 	if err := cache.Get("profile", &profile); err != nil {
 		err := app.DB.Get(&profile, "SELECT * FROM config")
 		if err != nil {
@@ -63,6 +58,10 @@ func (c App) About() revel.Result {
 }
 
 func (c App) Projects() revel.Result {
+	return c.Render()
+}
+
+func (c App) Repositories() revel.Result {
 	return c.Render()
 }
 

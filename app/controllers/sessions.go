@@ -16,14 +16,6 @@ type Sessions struct {
 	*revel.Controller
 }
 
-type UserProfile struct {
-	Name		string
-	Location	string
-	About		string
-	Github		string
-	Twitter		string
-	Instagram	string
-}
 
 func (c Sessions) Index() revel.Result {
 	if c.currentUser() != nil {
@@ -70,7 +62,7 @@ func (c Sessions) userLogin(username, password string) *models.User{
 }
 
 func (c Sessions) Edit() revel.Result {
-	var profile UserProfile
+	var profile models.UserProfile
 	err := app.DB.Get(&profile, "SELECT * FROM config")
 	if err != nil {
 		log.Printf("Couldn't get about data: %s", err.Error())

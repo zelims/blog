@@ -8,21 +8,16 @@ import (
 	"github.com/zelims/blog/app/models"
 	"log"
 	"math"
-	"strconv"
 )
 
 type Post struct {
 	*revel.Controller
 }
 
-func (c Post) Show(id int) revel.Result {
-	id, err := strconv.Atoi(c.Params.Get("id"))
-	if err != nil {
-		return c.NotFound("Could not find %d (%s)", id, err.Error())
-	}
-	post := c.getPostByID(id)
+func (c Post) Show(url string) revel.Result {
+	post := c.getPostByURL(url)
 	if post == nil {
-		return c.NotFound("Post %d does not exist", id)
+		return c.NotFound("Post /%s does not exist", url)
 	}
 	return c.Render(post)
 }
@@ -34,7 +29,7 @@ func (c Post) Keywords(tag string) revel.Result {
 	}
 	c.ViewArgs["posts"] = post
 	c.ViewArgs["search"] = "Searching posts tagged #" + tag
-	c.ViewArgs["pagen"] = &Pagination{int(math.Ceil(float64(len(post)) / 8)) }
+	c.ViewArgs["pagen"] = &models.Pagination{int(math.Ceil(float64(len(post)) / 8)) }
 	c.ViewArgs["pageNum"] = 1
 	return c.RenderTemplate("Post/search.html")
 }
@@ -51,36 +46,39 @@ func (c Post) Search() revel.Result {
 	}
 	posts := c.getPostData(query)
 	search := fmt.Sprintf("Found %d posts containing %s", len(posts), searchInp)
-	c.ViewArgs["pagen"] = &Pagination{int(math.Ceil(float64(len(posts)) / 8)) }
+	c.ViewArgs["pagen"] = &models.Pagination{int(math.Ceil(float64(len(posts)) / 8)) }
 	c.ViewArgs["pageNum"] = 1
 	return c.Render(search, posts)
+}
+
+func (c Post) getPostByURL(url string) *models.Post {
+	curPost := &models.Post{}
+	err := app.DB.Get(curPost,"SELECT * FROM posts WHERE friendly_url = ?", url)
+	if err != nil {
+		c.Log.Error("getPostByURL()", err.Error())
+		return nil
+	}
+	curPost.Format()
+	return curPost
 }
 
 func (c Post) getPostsByTag(tag string) []*models.Post {
 	query, err := app.DB.Query("SELECT * FROM `posts` WHERE FIND_IN_SET(?, `tags`)", tag)
 	if err != nil {
-		c.Log.Error("Query Error: %s", err.Error())
+		c.Log.Error("getPostsByTag()", err.Error())
 		return nil
 	}
-
 	return c.getPostData(query)
 }
 
 func (c Post) getPostByID(id int) *models.Post {
-	query, err := app.DB.Query("SELECT * FROM posts WHERE id = ?", id)
+	curPost := &models.Post{}
+	err := app.DB.Get(curPost,"SELECT * FROM posts WHERE id = ?", id)
 	if err != nil {
-		c.Log.Error("Query Error: %s", err.Error())
+		c.Log.Error("getPostByID()", err.Error())
 		return nil
 	}
-	curPost := &models.Post{}
-	for query.Next() {
-		if err = query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
-			&curPost.Description, &curPost.Tags, &curPost.Banner, &curPost.Images, &curPost.Date,
-			&curPost.Updated); err != nil {
-			log.Printf("[!] Error scanning to post: %s", err.Error())
-		}
-		curPost.Format()
-	}
+	curPost.Format()
 	return curPost
 }
 
@@ -89,8 +87,8 @@ func (c Post) getPostData(query *sql.Rows) []*models.Post {
 	for query.Next() {
 		curPost := &models.Post{}
 		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
-			&curPost.Description, &curPost.Tags, &curPost.Banner, &curPost.Images, &curPost.Date,
-			&curPost.Updated); err != nil {
+			&curPost.Description, &curPost.URL, &curPost.Tags, &curPost.Banner, &curPost.Images,
+			&curPost.Date, &curPost.Updated); err != nil {
 			log.Printf("[!] Error scanning to post: %s", err.Error())
 		}
 		curPost.Format()
