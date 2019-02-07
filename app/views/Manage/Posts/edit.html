@@ -11,7 +11,7 @@
         {{ template "Manage/Posts/form.html" .post }}
         <hr>
         <a href="{{ url "Posts.View" }}" class="btn btn-danger float-left"><i class="fas fa-times"></i> Cancel</a>
-        <button type="submit" class="btn btn-success float-right"><i class="fas fa-check"></i> Submit Edit</button>
+        <button type="submit" data-type="post" class="btn btn-success float-right"><i class="fas fa-check"></i> Submit Edit</button>
         <div class="clearfix"></div>
     </form>
 </div>

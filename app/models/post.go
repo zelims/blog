@@ -100,5 +100,5 @@ func (p *Post) formatTags() {
 }
 
 func (p *Post) formatContent() {
-	p.Description += fmt.Sprintf("... <a href=\"/post/%d\" class=\"read-more\">Read more</a>", p.ID)
+	p.Description += fmt.Sprintf("... <a href=\"/post/%s\" class=\"read-more\">Read more</a>", p.URL)
 }

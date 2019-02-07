@@ -1,7 +1,3 @@
-{{if .DevMode}}
-    {{template "debug.html" .}}
-{{end}}
-</div>
 <div class="notify-alert" id="custom-notify">
     <div class="row">
         <div class="col">
@@ -97,6 +93,33 @@
 
                 $(element).text(count);
             }
+
+            let unsaved = false;
+
+            $("#post-title").change(function(){
+                unsaved = true;
+            });
+            $("#post-description").change(function(){
+                unsaved = true;
+            });
+            $("#post-content").change(function(){
+                unsaved = true;
+            });
+            $("#post-tags").change(function(){
+                unsaved = true;
+            });
+
+            let submit_post = false;
+            $('[data-type="post"]').on('click', function() {
+                submit_post = true;
+            });
+
+            $(window).bind("beforeunload",function(event) {
+                if(unsaved && !submit_post) {
+                    return "You have unsaved changes on this page.";
+                }
+            });
+
         });
 
     </script>

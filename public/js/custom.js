@@ -6,27 +6,6 @@ $('.navbar .dropdown-menu').on("mouseleave", function() {
     $(this).removeClass('show');
 });
 
-let unsaved = false;
-
-$("#post-title").change(function(){
-    unsaved = true;
-});
-$("#post-description").change(function(){
-    unsaved = true;
-});
-$("#post-content").change(function(){
-    unsaved = true;
-});
-$("#post-tags").change(function(){
-    unsaved = true;
-});
-
-$(window).bind("beforeunload",function(event) {
-    if(unsaved) {
-        return "You have unsaved changes on this page.";
-    }
-});
-
 $('a.page-number').click(function(e) {
     let page = $(this).attr('page-number');
     switchPage(page);

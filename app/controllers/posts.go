@@ -41,7 +41,7 @@ func (p Posts) Edit(id int) revel.Result {
 
 func checkURLExists(url string) int {
 	count := 0
-	err := app.DB.QueryRow("SELECT COUNT(*) FROM posts WHERE friendly_url = ?", url).Scan(&count)
+	err := app.DB.QueryRow("SELECT COUNT(*) FROM posts WHERE friendly_url LIKE ?", url).Scan(&count)
 	if err != nil {
 		log.Printf("Could not query row %s", err.Error())
 		return -1
@@ -59,17 +59,19 @@ func (p Posts) Create() revel.Result {
 	if titleLen > 64 {
 		titleLen = 64
 	}
-	log.Printf("%d", titleLen)
-	friendlyURL := strings.Replace(postTitle[0:titleLen], " ", "-", -1)
-	log.Printf("%s || %s", postTitle[0:titleLen], friendlyURL)
-	count := checkURLExists(friendlyURL)
+	friendlyURL := strings.ToLower(strings.Replace(postTitle[0:titleLen], " ", "-", -1))
+	count := checkURLExists(friendlyURL + "%")
 	if count > 0 {
 		friendlyURL = fmt.Sprintf("%s-%d", friendlyURL, count+1)
+	} else if count == -1 {
+		log.Printf("Could not create post as the URL messed up")
+		p.Flash.Error(fmt.Sprintf("The friendly url check failed, please report this issue!"))
+		return p.RenderTemplate(routes.Posts.View())
 	}
 
-	log.Printf("friendlyURL: %s", friendlyURL)
+	log.Printf("\t FRIENDLY URL: %s", friendlyURL)
 
-	/*_, err := app.DB.NamedExec(`INSERT INTO posts (ID, author, title, content, description, friendly_url, tags, banner, images, date)` +
+	_, err := app.DB.NamedExec(`INSERT INTO posts (ID, author, title, content, description, friendly_url, tags, banner, images, date)` +
 		` VALUES (:id,:author,:title,:content,:desc,:url,:tags,:banner,:images,:date)`,
 		map[string]interface{}{
 			"id":          	nil,
@@ -88,7 +90,7 @@ func (p Posts) Create() revel.Result {
 		log.Printf("Could not insert into posts: %s", err.Error())
 		p.Flash.Error(fmt.Sprintf("Couldn't create post: %s", err.Error()))
 		return p.RenderTemplate(routes.Posts.View())
-	}*/
+	}
 	p.Flash.Success("Post created!")
 	return p.Redirect(routes.Posts.View())
 }
