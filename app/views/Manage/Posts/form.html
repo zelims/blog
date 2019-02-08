@@ -31,7 +31,7 @@
 <div class="form-group">
     <label for="post-banner">Banner Image</label>
     {{ if .Banner }}
-        <img src="/public/img/posts/{{ .ID }}/{{ .Banner }}" alt="" class="post-banner-thumbnail" />
+        <img src="/public/images/posts/{{ .Banner }}.jpg" alt="" class="post-banner-thumbnail" />
     {{ end }}
     <input type="file" class="form-control-file" id="post-banner" name="post-banner" />
 </div>

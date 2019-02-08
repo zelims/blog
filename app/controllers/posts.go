@@ -12,6 +12,7 @@ import (
 	"github.com/zelims/blog/app/routes"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -95,18 +96,32 @@ func (p Posts) Modify(id int) revel.Result {
 		return p.Redirect(routes.Posts.View())
 	}
 
-	query := "title=:title, content=:content, description=:desc, tags=:tags, banner=:banner, last_update=:date"
+	curPost, err := models.PostByID(id)
+	if err != nil {
+		log.Printf("Could not get current post in database: %s", err.Error())
+	}
+
+	if postValues["banner"] != "" && postValues["banner"] != curPost.Banner {
+		err := os.Remove(fmt.Sprintf("public/images/posts/%s.jpg", curPost.Banner))
+		if err != nil {
+			log.Printf("Could not remove previous banner: %s", err.Error())
+		}
+	}
+
+	query := "title=:title, content=:content, description=:desc, tags=:tags, last_update=:date"
 	queryData := map[string]interface{}{
 		"id":      			id,
 		"title":   			postValues["title"],
 		"content": 			postValues["content"],
 		"desc":    			postValues["description"],
 		"tags":    			postValues["tags"],
-		"banner":			postValues["banner"],
 		"date":    			time.Now().Unix(),
 	}
 
-	log.Printf("Updating banner to %s", queryData["banner"])
+	if postValues["banner"] != "" {
+		query += ",banner=:banner"
+		queryData["banner"] = postValues["banner"]
+	}
 
 	_, err = app.DB.NamedExec(`UPDATE posts SET `+query+` WHERE id=:id`, queryData)
 
@@ -171,7 +186,9 @@ func (p Posts) throwEditErr(err error, id int) bool {
 func (p Posts) getBannerImage(title string) (name string, err error) {
 	image, err := imageupload.Process(p.Request.In.GetRaw().(*http.Request), "post-banner")
 
-	if err != nil {
+	if err == http.ErrMissingFile {
+		return "", nil
+	} else if err != nil {
 		return
 	}
 
