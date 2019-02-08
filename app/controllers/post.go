@@ -29,7 +29,7 @@ func (c Post) Keywords(tag string) revel.Result {
 	}
 	c.ViewArgs["posts"] = post
 	c.ViewArgs["search"] = "Searching posts tagged #" + tag
-	c.ViewArgs["pagen"] = &models.Pagination{int(math.Ceil(float64(len(post)) / 8)) }
+	c.ViewArgs["pagen"] = &models.Pagination{Pages: int(math.Ceil(float64(len(post)) / 8)) }
 	c.ViewArgs["pageNum"] = 1
 	return c.RenderTemplate("Post/search.html")
 }

@@ -1,16 +1,17 @@
 package controllers
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
+	"github.com/kataras/iris/core/errors"
+	"github.com/olahol/go-imageupload"
 	"github.com/revel/revel"
 	"github.com/zelims/blog/app"
 	"github.com/zelims/blog/app/models"
 	"github.com/zelims/blog/app/routes"
-	"io/ioutil"
 	"log"
-	"mime/multipart"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -53,38 +54,26 @@ func (p Posts) Create() revel.Result {
 	if !p.Authenticated() {
 		return p.Redirect(routes.Sessions.Index())
 	}
-	postTitle := p.Params.Form.Get("post-title")
 
-	titleLen := len(postTitle)
-	if titleLen > 64 {
-		titleLen = 64
-	}
-	friendlyURL := strings.ToLower(strings.Replace(postTitle[0:titleLen], " ", "-", -1))
-	count := checkURLExists(friendlyURL + "%")
-	if count > 0 {
-		friendlyURL = fmt.Sprintf("%s-%d", friendlyURL, count+1)
-	} else if count == -1 {
-		log.Printf("Could not create post as the URL messed up")
-		p.Flash.Error(fmt.Sprintf("The friendly url check failed, please report this issue!"))
-		return p.RenderTemplate(routes.Posts.View())
+	postValues, err := p.getFormValues()
+	if err != nil {
+		// error handle
+		return p.Redirect(routes.Posts.View())
 	}
 
-	log.Printf("\t FRIENDLY URL: %s", friendlyURL)
-
-	_, err := app.DB.NamedExec(`INSERT INTO posts (ID, author, title, content, description, friendly_url, tags, banner, images, date)` +
+	_, err = app.DB.NamedExec(`INSERT INTO posts (ID, author, title, content, description, friendly_url, tags, banner, images, date)` +
 		` VALUES (:id,:author,:title,:content,:desc,:url,:tags,:banner,:images,:date)`,
 		map[string]interface{}{
 			"id":          	nil,
 			"author":      	p.currentUser().Username,
-			"title":       	postTitle,
-			"content":     	p.Params.Form.Get("post-content"),
-			"desc":        	p.Params.Form.Get("post-description"),
-			"url":		   	friendlyURL,
-			"tags":        	p.Params.Form.Get("post-tags"),
-			"banner":		"",
-			"images":		"",
+			"title":       	postValues["title"],
+			"content":     	postValues["content"],
+			"desc":        	postValues["description"],
+			"url":		   	postValues["url"],
+			"tags":        	postValues["tags"],
+			"banner":		postValues["banner"],
+			"images":		postValues["images"],
 			"date":        	time.Now().Unix(),
-			"last_update": 	nil,
 		})
 	if err != nil {
 		log.Printf("Could not insert into posts: %s", err.Error())
@@ -99,34 +88,27 @@ func (p Posts) Modify(id int) revel.Result {
 		return p.Redirect(routes.Sessions.Index())
 	}
 
-	query := "title=:title, content=:content, description=:desc, tags=:tags, last_update=:date"
+	postValues, err := p.getFormValues()
+	if err != nil {
+		log.Printf("Could not get form values: %s", err.Error())
+		p.Flash.Error(fmt.Sprintf("Couldn't modify post: %s", err.Error()))
+		return p.Redirect(routes.Posts.View())
+	}
+
+	query := "title=:title, content=:content, description=:desc, tags=:tags, banner=:banner, last_update=:date"
 	queryData := map[string]interface{}{
-		"id":      id,
-		"title":   p.Params.Form.Get("post-title"),
-		"content": p.Params.Form.Get("post-content"),
-		"desc":    p.Params.Form.Get("post-description"),
-		"tags":    p.Params.Form.Get("post-tags"),
-		"date":    time.Now().Unix(),
-	}
-	if p.Params.Form.Get("post-banner") != "" {
-		request := p.Request.In.GetRaw().(*http.Request)
-
-		file, handle, err := request.FormFile("post-banner")
-		if p.throwEditErr(err, id) {
-			return p.RenderTemplate(routes.Posts.Edit(id))
-		}
-		defer file.Close()
-
-		if valid, fname := p.HandleImageUpload(file, handle, id); valid == true {
-			query += ",banner=:banner"
-			queryData["banner"] = fname
-			log.Printf("Updated banner: %s", queryData)
-		} else {
-			log.Printf("[!] Could not upload banner: %s", err.Error())
-		}
+		"id":      			id,
+		"title":   			postValues["title"],
+		"content": 			postValues["content"],
+		"desc":    			postValues["description"],
+		"tags":    			postValues["tags"],
+		"banner":			postValues["banner"],
+		"date":    			time.Now().Unix(),
 	}
 
-	_, err := app.DB.NamedExec(`UPDATE posts SET `+query+` WHERE id=:id`, queryData)
+	log.Printf("Updating banner to %s", queryData["banner"])
+
+	_, err = app.DB.NamedExec(`UPDATE posts SET `+query+` WHERE id=:id`, queryData)
 
 	if err != nil {
 		log.Printf("Could not update post %d: %s", id, err.Error())
@@ -137,44 +119,83 @@ func (p Posts) Modify(id int) revel.Result {
 	return p.Redirect(routes.Posts.Edit(id))
 }
 
+func (p Posts) getFormValues() (map[string]string, error) {
+	formValues := make(map[string]string)
+	var err error
+
+	formValues["title"]				= p.Params.Form.Get("post-title")
+	formValues["content"] 			= p.Params.Form.Get("post-content")
+	formValues["description"] 		= p.Params.Form.Get("post-description")
+	formValues["tags"] 				= p.Params.Form.Get("post-tags")
+
+	titleLen := len(formValues["title"])
+	if titleLen > 64 {
+		titleLen = 64
+	}
+	friendlyURL := strings.ToLower(strings.Replace(formValues["title"][0:titleLen], " ", "-", -1))
+	count := checkURLExists(friendlyURL + "%")
+	if count > 0 {
+		friendlyURL = fmt.Sprintf("%s-%d", friendlyURL, count+1)
+	} else if count == -1 {
+		log.Printf("Could not create post as the URL messed up")
+		p.Flash.Error(fmt.Sprintf("The friendly url check failed, please report this issue!"))
+		return nil, errors.New("Friendly url check failed")
+	}
+	formValues["url"] = friendlyURL
+
+	formValues["banner"], err = p.getBannerImage(formValues["title"])
+	if err != nil {
+		log.Printf("Create error (banner): %s", err.Error())
+		p.Flash.Error(fmt.Sprintf("Create error: %s", err.Error()))
+		return nil, err
+	}
+
+	formValues["images"], err = p.getPostImages(formValues["title"])
+	if err != nil {
+		log.Printf("Create error (images): %s", err.Error())
+		p.Flash.Error(fmt.Sprintf("Create error: %s", err.Error()))
+		return nil, err
+	}
+	return formValues, err
+}
+
 func (p Posts) throwEditErr(err error, id int) bool {
 	if err != nil {
-		log.Printf("Could not update banner %d: %s", id, err.Error())
+		log.Printf("Could not modify post #%d: %s", id, err.Error())
 		p.Flash.Error(fmt.Sprintf("Couldn't modify post: %s", err.Error()))
 		return true
 	}
 	return false
 }
 
-const (
-	_      = iota
-	KB int = 1 << (10 * iota)
-	MB
-	GB
-)
+func (p Posts) getBannerImage(title string) (name string, err error) {
+	image, err := imageupload.Process(p.Request.In.GetRaw().(*http.Request), "post-banner")
 
-func (p Posts) HandleImageUpload(file multipart.File, handle *multipart.FileHeader, id int) (bool, string) {
-	p.Validation.Required(file)
-	p.Validation.MinSize(file, 2*KB).
-		Message("Minimum a file size of 2KB expected")
-	p.Validation.MaxSize(file, 5*MB).
-		Message("File cannot be larger than 5MB")
-
-	data, err := ioutil.ReadAll(file)
-	if p.throwEditErr(err, id) {
-		return false, ""
+	if err != nil {
+		return
 	}
 
-	//format := handle.Header.Get("Content-Type")
-	log.Printf("%s", handle.Filename)
-	//p.Validation.Required(format == "jpeg" || format == "png").Key("post-banner").
-	//	Message("JPEG or PNG file format is expected")
+	titleHash := md5.Sum([]byte(title))
+	titleHashStr := hex.EncodeToString(titleHash[:])
 
-	err = ioutil.WriteFile("/public/img/posts/"+strconv.Itoa(id)+"/"+handle.Filename, data, 0666)
-	if p.throwEditErr(err, id) {
-		return false, ""
+	fileHash := md5.Sum([]byte(image.Filename))
+	fileHashStr := hex.EncodeToString(fileHash[:])
+
+	fileName := md5.Sum([]byte(titleHashStr + fileHashStr))
+	image.Filename = hex.EncodeToString(fileName[:])
+
+	err = image.Save(fmt.Sprintf("public/images/posts/%s.jpg", image.Filename))
+
+	if err != nil {
+		log.Printf("Failed to save banner: %s", err.Error())
+		return
 	}
 
-	log.Printf("%x", handle.Filename)
-	return true, handle.Filename
+	return image.Filename, err
+}
+
+func (p Posts) getPostImages(title string) (names string, error error) {
+
+	// return "" if there is no file uploaded
+	return "", nil
 }

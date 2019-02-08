@@ -71,7 +71,7 @@ func setupTemplateFuncs() {
 		return template.HTML(str)
 	}
 	revel.TemplateFuncs["bannerImg"] = func(id int, imgName string) template.HTML {
-		img := fmt.Sprintf("/public/img/posts/%d/%s", id, imgName)
+		img := fmt.Sprintf("/public/images/posts/%s.jpg", imgName)
 		if _, err := os.Stat(revel.BasePath + img); err != nil {
 			return ""
 		}
