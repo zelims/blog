@@ -17,6 +17,11 @@ type App struct {
 	*revel.Controller
 }
 
+func init() {
+	revel.InterceptFunc(models.TrackUser, revel.AFTER, &App{})
+	revel.InterceptFunc(models.TrackUser, revel.AFTER, &Post{})
+}
+
 func (c App) Index() revel.Result {
 	posts, size := models.Posts(1)
 

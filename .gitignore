@@ -4,3 +4,4 @@ routes/
 .idea/
 build/
 public/images/post*
+*.mmdb

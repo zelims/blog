@@ -12,11 +12,8 @@ type Manage struct {
 
 func (c Manage) Index() revel.Result {
 	c.ViewArgs["postCount"] = models.SizeOfAllPosts()
-	c.ViewArgs["visitors"] = map[string]int {
-		"AF": 16,
-		"AL": 11,
-		"DZ": 158,
-		"US": 1395,
-	}
+	analyticData := models.GetAnalyticData()
+	c.ViewArgs["unique_visitors"] = models.GetUniqueVisitors()
+	c.ViewArgs["visitors"] = analyticData
 	return c.checkAuth("Manage/index.html")
 }

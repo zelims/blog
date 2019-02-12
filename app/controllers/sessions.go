@@ -112,7 +112,7 @@ func (c Sessions) Login(username string, password string, rememberMe bool) revel
 	return c.Redirect(routes.Sessions.Index())
 }
 func (c Sessions) Logout() revel.Result{
-	for k:= range c.Session{
+	for k:= range c.Session {
 		delete(c.Session, k)
 	}
 	return c.Redirect(routes.App.Index())
@@ -122,7 +122,6 @@ func encryptPwd(pwd string) string {
 	h := sha256.Sum256([]byte(pwd))
 	return base64.StdEncoding.EncodeToString(h[:])
 }
-
 
 func (c Sessions) Authenticated() bool {
 	return !(c.currentUser() == nil)

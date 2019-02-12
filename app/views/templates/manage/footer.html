@@ -32,8 +32,8 @@
 <script>
     let visitorMap = $('#visitor-map');
     let seriesdata = {
-        {{ range $k, $v := .visitors }}
-            "{{ $k }}": {{ $v }},
+        {{ range $x, $v := .visitors }}
+            "{{ $v.CountryCode }}": {{ $v.UserCount }},
         {{ end }}
     };
     createMap(visitorMap, "", seriesdata);
