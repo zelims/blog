@@ -63,6 +63,10 @@ function switchPage(page) {
     });
 }
 
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
 let _markers = [];
 function createMap(element, markers="", seriesdata="") {
     if(markers !== "")
@@ -112,55 +116,50 @@ function createMap(element, markers="", seriesdata="") {
     serverMapSvg.removeAttr('width');
     serverMapSvg.removeAttr('height');
 }
-/**
- * Show Notification at top of screen
- * @param parent        (null)              =   parent div (a, btn, etc.)
- * @param target_id     (notify-value)      =   id of the target notify (data-value attr on parent)
- * @param text          (notify-text)       =   text of message
- * @param scheme        (notify-scheme)     =   color scheme (bootstrap)
- * @param timeout       (notify-timeout)    =   timeout in ms
- */
-function showNotifyAlert(parent, target_id="", text="", scheme="", timeout=2500) {
 
-    target_id = '#' + target_id;
+function showToast(title, type="", time="",  body, duration=2000) {
+    let toastTmpl = $('#toast-tmpl');
+    let toastId = makeRandomId();
+    let toast = toastTmpl.clone().prop('id', toastId);
 
-    $(target_id).addClass('show');
+    toast.find("[toast-data=\"toast-header-title\"]").html(title);
+    let icon = "far fa-question-circle";
+    let toastType = "toast-";
 
-    if(text === "" && parent)
-        text = parent.attr('notify-text');
+    if (type === "success")
+        icon = "fas fa-check";
+    else if (type === "error")
+        icon = "fas fa-times";
+    else if (type === "warning")
+        icon = "fas fa-exclamation";
+    else
+        type = "none";
 
-    $(target_id).find('#notify-alert-text').html(text);
+    toast.addClass(toastType + type);
 
-    if(scheme === "" && parent)
-        scheme = parent.attr('notify-scheme');
+    toast.find("[toast-data=\"toast-header-icon\"]").addClass(icon);
+    toast.find("[toast-data=\"toast-header-time\"]").html(time);
+    toast.find("[toast-data=\"toast-body\"]").html(body);
 
-    if(timeout === 2500 && parent) {
-        let dto = parent.attr('notify-timeout');
-        if(dto)
-            timeout = dto;
+    let shouldHide = true;
+    if (duration === -1) {
+        shouldHide = false
     }
 
-    var icon;
-    switch(scheme) {
-        case "danger":
-            icon = "fa-times";
-            break;
-        case "warning":
-            icon = "fa-exclamation-circle";
-            break;
-        case "success":
-            icon = "fa-check";
-            break;
-        case "info":
-            icon = "fa-question";
-            break;
-        default:
-            scheme = "primary";
-            icon = "fa-exclamation";
-    }
-    $(target_id).find('#notify-alert-scheme').addClass('bg-' + scheme);
-    $(target_id).find('#notify-alert-icon').addClass(icon);
-    setTimeout(function() {
-        $(target_id).removeClass("show");
-    }, timeout);
+    $("#toast-list").append(toast);
+
+    toast.toast({
+        delay: duration,
+        autohide: shouldHide,
+    }).toast('show');
+}
+
+function makeRandomId() {
+    let text = "";
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (let i = 0; i < 10; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
 }

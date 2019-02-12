@@ -1,7 +1,7 @@
 {{if .flash.success}}
-<div class="alert alert-success">
-	<i class="fas fa-check"></i> {{.flash.success}}
-</div>
+	<div class="alert alert-success">
+		<i class="fas fa-times"></i> {{.flash.success}}
+	</div>
 {{end}}
 
 {{if or .errors .flash.error}}

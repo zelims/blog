@@ -1,6 +1,6 @@
 {{if .flash.success}}
     <script>
-        showNotifyAlert(null, "custom-notify", "{{.flash.success}}", "success");
+        showToast("Success", "success", "", {{ .flash.success }}, 2500);
     </script>
 {{end}}
 
@@ -11,9 +11,9 @@
             {{range .errors}}
                 errors.push("{{.}}");
             {{end}}
-            showNotifyAlert(null, "custom-notify", errors, "danger", 4000);
+            showToast("Errors", "error", "", errors, -1);
         {{ else }}
-            showNotifyAlert(null, "custom-notify", "{{ .flash.error }}", "danger", 6000);
+            showToast("Error", "error", "", {{ .flash.error }}, 6000);
         {{ end }}
     </script>
 {{end}}
