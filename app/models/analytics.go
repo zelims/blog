@@ -28,6 +28,7 @@ type AnalyticData struct {
 	Browser		string
 	Device		string
 	Time		int
+	Visits		int		`db:"visits"`
 }
 
 func TrackUser(c *revel.Controller) revel.Result {
@@ -111,7 +112,7 @@ func GetCountryAnalytics() (countryAnalytics []CountryAnalytics) {
 }
 
 func GetAnalyticData() (aData []AnalyticData) {
-	err := app.DB.Select(&aData, "SELECT * FROM analytics GROUP BY uuid")
+	err := app.DB.Select(&aData, "SELECT *,COUNT(*) AS visits FROM analytics GROUP BY uuid")
 	if err != nil {
 		log.Printf("Could not get analytics: %s", err.Error())
 	}
