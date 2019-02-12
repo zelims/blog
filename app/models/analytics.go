@@ -13,9 +13,21 @@ import (
 	"time"
 )
 
-type AnalyticData struct {
+type CountryAnalytics struct {
 	CountryCode		string	`db:"country"`
 	UserCount		int		`db:"count"`
+}
+
+type AnalyticData struct {
+	ID			int		`db:"ID"`
+	UUID		string	`db:"uuid"`
+	Page		string
+	IP			string	`db:"ip_address"`
+	Country		string
+	OS			string
+	Browser		string
+	Device		string
+	Time		int
 }
 
 func TrackUser(c *revel.Controller) revel.Result {
@@ -51,7 +63,7 @@ func TrackUser(c *revel.Controller) revel.Result {
 			"id":		nil,
 			"uuid":		trackID,
 			"page":		request.URL.String(),
-			"ip":		request.RemoteAddr,
+			"ip":		ipAddress,
 			"country":	countryCode,
 			"os":		fmt.Sprintf("%s %d", OS, ua.OS.Version.Major),
 			"browser":	browser,
@@ -90,10 +102,26 @@ func GetUniqueVisitors() (count int) {
 	return
 }
 
-func GetAnalyticData() (analyticData AnalyticData) {
-	err := app.DB.Select(&analyticData, `SELECT country,COUNT(*) AS count FROM ( SELECT uuid,country FROM analytics GROUP BY uuid ) t GROUP BY country`)
+func GetCountryAnalytics() (countryAnalytics []CountryAnalytics) {
+	err := app.DB.Select(&countryAnalytics, `SELECT country,COUNT(*) AS count FROM ( SELECT uuid,country FROM analytics GROUP BY uuid ) t GROUP BY country`)
 	if err != nil {
-		log.Printf("Failed to get analytics: %s", err.Error())
+		log.Printf("Failed to get country analytics: %s", err.Error())
+	}
+	return
+}
+
+func GetAnalyticData() (aData []AnalyticData) {
+	err := app.DB.Select(&aData, "SELECT * FROM analytics GROUP BY uuid")
+	if err != nil {
+		log.Printf("Could not get analytics: %s", err.Error())
+	}
+	return
+}
+
+func AnalyticsByUUID(uuid string) (aData []AnalyticData) {
+	err := app.DB.Select(&aData, "SELECT * FROM analytics WHERE uuid = ?", uuid)
+	if err != nil {
+		log.Printf("Could not get analytics for user [%s]: %s", uuid, err.Error())
 	}
 	return
 }

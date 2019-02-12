@@ -26,7 +26,7 @@
             {{ else }}
                 n/a
             {{ end }}</td>
-            <td class="nowrap">{{ time_format .UpdatedAt }}</td>
+            <td class="nowrap">{{ github_time_format .UpdatedAt }}</td>
             <td class="text-center">{{ .OpenIssuesCount }}</td>
         </tr>
     {{ end }}

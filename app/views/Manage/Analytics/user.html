@@ -1,0 +1,38 @@
+{{ set . "title" (strcat "Analytics for " .user_uuid) }}
+{{ set . "active" "analytics" }}
+{{ template "templates/manage/header.html" . }}
+{{ template "templates/manage/navigation.html" . }}
+
+<div class="content">
+    <h3>Analytics for {{ .user_uuid }}</h3>
+    <hr>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>User ID</th>
+            <th>IP</th>
+            <th>Country</th>
+            <th>OS</th>
+            <th>Browser</th>
+            <th>Device</th>
+            <th>Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{ range .analytics_user }}
+            <tr>
+                <td>{{ .Page }}</td>
+                <td>{{ .IP }}</td>
+                <td>{{ .Country }}</td>
+                <td>{{ .OS }}</td>
+                <td>{{ .Browser }}</td>
+                <td>{{ .Device }}</td>
+                <td>{{ time_format .Time }}</td>
+            </tr>
+        {{ end }}
+        </tbody>
+    </table>
+    <hr>
+    <a href="{{ url "Analytics.View" }}" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Go back</a>
+</div>
+{{ template "templates/manage/footer.html" . }}

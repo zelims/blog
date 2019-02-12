@@ -121,6 +121,7 @@ function showToast(title, type="", time="",  body, duration=2000) {
     let toastTmpl = $('#toast-tmpl');
     let toastId = makeRandomId();
     let toast = toastTmpl.clone().prop('id', toastId);
+    toast.removeClass("d-none");
 
     toast.find("[toast-data=\"toast-header-title\"]").html(title);
     let icon = "far fa-question-circle";

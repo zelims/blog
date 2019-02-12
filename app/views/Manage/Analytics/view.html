@@ -4,6 +4,37 @@
 {{ template "templates/manage/navigation.html" . }}
 
 <div class="content">
-    Hello {{ .username }}
+    <h3>Website Visitors</h3>
+    <hr>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Visits</th>
+                <th>Last IP</th>
+                <th>Country</th>
+                <th>OS</th>
+                <th>Browser</th>
+                <th>Device</th>
+                <th>Last Seen</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .visitors }}
+                <tr>
+                    <td>{{ .UUID }}</td>
+                    <td>{{ .Visits }}</td>
+                    <td>{{ .IP }}</td>
+                    <td>{{ .Country }}</td>
+                    <td>{{ .OS }}</td>
+                    <td>{{ .Browser }}</td>
+                    <td>{{ .Device }}</td>
+                    <td>{{ time_format .Time }}</td>
+                    <td><a class="btn btn-primary w-100" href="{{ url "Analytics.User" .UUID }}">View</a></td>
+                </tr>
+            {{ end }}
+        </tbody>
+    </table>
 </div>
 {{ template "templates/manage/footer.html" . }}

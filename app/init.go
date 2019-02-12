@@ -12,6 +12,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var (
@@ -94,8 +95,11 @@ func setupTemplateFuncs() {
 		}()
 		return
 	}
-	revel.TemplateFuncs["time_format"] = func(t *github.Timestamp) string {
+	revel.TemplateFuncs["github_time_format"] = func(t *github.Timestamp) string {
 		return t.Format("02 Jan 2006 15:04")
+	}
+	revel.TemplateFuncs["time_format"] = func(unixTime int) string {
+		return time.Unix(int64(unixTime), 0).Format("02 Jan 2006 15:04")
 	}
 }
 
