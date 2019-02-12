@@ -28,7 +28,7 @@
                 <td>{{ .Count }}</td>
                 <td>{{ .Date }}</td>
                 <td>{{ .Modified }}</td>
-                <td><a class="btn btn-primary w-100" href="{{ url "Analytics.User" .UUID }}">View</a></td>
+                <td><a class="btn btn-primary w-100" href="{{ url "Analytics.Post" .Title }}">View</a></td>
             </tr>
         {{ end }}
         </tbody>

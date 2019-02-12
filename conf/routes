@@ -41,6 +41,7 @@ POST    /manage/posts/action/edit               Posts.Modify
 GET     /manage/analytics                       Analytics.View
 GET     /manage/analytics/posts                 Analytics.Posts
 GET     /manage/analytics/:uuid                 Analytics.User
+GET     /manage/analytics/post/:title           Analytics.Post
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

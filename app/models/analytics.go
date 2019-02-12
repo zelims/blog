@@ -126,3 +126,21 @@ func AnalyticsByUUID(uuid string) (aData []AnalyticData) {
 	}
 	return
 }
+
+func AnalyticsByPost(title string) (aData []AnalyticData) {
+	var post Post
+	err := app.DB.Get(&post, "SELECT * FROM posts WHERE friendly_url = ?", title)
+	if err != nil {
+		log.Printf("Could not get post: %s", err.Error())
+	}
+	err = app.DB.Select(&aData, "SELECT * FROM analytics WHERE page = ?", title)
+	if err != nil {
+		log.Printf("Could not get analytics for post #%d: %s", post.ID, err.Error())
+	}
+	return
+}
+
+func PostsWithAnalytics() (posts []Post) {
+	// check analytics for that posts that have been visited
+	return
+}
