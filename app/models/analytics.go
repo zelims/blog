@@ -31,6 +31,11 @@ type AnalyticData struct {
 	Visits		int		`db:"visits"`
 }
 
+type AnalyticsPosts struct {
+	Post
+	Count		int		`db:"count"`
+}
+
 func TrackUser(c *revel.Controller) revel.Result {
 	trackID := c.Session["trackID"]
 	if trackID == nil {
@@ -128,19 +133,32 @@ func AnalyticsByUUID(uuid string) (aData []AnalyticData) {
 }
 
 func AnalyticsByPost(title string) (aData []AnalyticData) {
-	var post Post
-	err := app.DB.Get(&post, "SELECT * FROM posts WHERE friendly_url = ?", title)
+	err := app.DB.Select(&aData, "SELECT a.* FROM posts p JOIN analytics a ON a.page LIKE CONCAT('%', p.friendly_url, '%') GROUP BY a.uuid")
 	if err != nil {
-		log.Printf("Could not get post: %s", err.Error())
-	}
-	err = app.DB.Select(&aData, "SELECT * FROM analytics WHERE page = ?", title)
-	if err != nil {
-		log.Printf("Could not get analytics for post #%d: %s", post.ID, err.Error())
+		log.Printf("Could not get posts: %s", err.Error())
+		return nil
 	}
 	return
 }
 
-func PostsWithAnalytics() (posts []Post) {
-	// check analytics for that posts that have been visited
+func PostsWithAnalytics() (posts []*AnalyticsPosts) {
+	/**
+	SELECT * FROM posts p JOIN analytics a
+	ON a.page LIKE CONCAT('%', p.friendly_url, '%') GROUP BY p.id
+	 */
+	err := app.DB.Select(&posts, "SELECT p.*,COUNT(a.uuid) AS count FROM posts p JOIN analytics a ON a.page LIKE CONCAT('%', p.friendly_url, '%') GROUP BY p.id")
+	if err != nil {
+		log.Printf("Could not get posts: %s", err.Error())
+		return nil
+	}
+
+	formatAnalyticsPosts(posts)
+
 	return
+}
+
+func formatAnalyticsPosts(posts []*AnalyticsPosts) {
+	for _, p := range posts {
+		p.Format()
+	}
 }

@@ -99,7 +99,10 @@ func setupTemplateFuncs() {
 		return t.Format("02 Jan 2006 15:04")
 	}
 	revel.TemplateFuncs["time_format"] = func(unixTime int) string {
-		return time.Unix(int64(unixTime), 0).Format("02 Jan 2006 15:04")
+		return time.Unix(int64(unixTime), 0).Format("02 Jan 2006 15:04:05")
+	}
+	revel.TemplateFuncs["itoa"] = func(i int) string {
+		return strconv.Itoa(i)
 	}
 }
 

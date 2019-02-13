@@ -1,12 +1,10 @@
 package controllers
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/revel/revel"
 	"github.com/zelims/blog/app"
 	"github.com/zelims/blog/app/models"
-	"log"
 	"math"
 )
 
@@ -15,7 +13,7 @@ type Post struct {
 }
 
 func (c Post) Show(url string) revel.Result {
-	post := c.getPostByURL(url)
+	post := models.GetPostByURL(url)
 	if post == nil {
 		return c.NotFound("Post /%s does not exist", url)
 	}
@@ -23,7 +21,7 @@ func (c Post) Show(url string) revel.Result {
 }
 
 func (c Post) Keywords(tag string) revel.Result {
-	post := c.getPostsByTag(tag)
+	post := models.GetPostsByTag(tag)
 	if post == nil {
 		return c.NotFound("Could not find any posts tagged %s", tag)
 	}
@@ -44,55 +42,9 @@ func (c Post) Search() revel.Result {
 		c.Log.Error("Query Error: ", err.Error())
 		return c.NotFound("Could not find any posts containing %s", searchInp)
 	}
-	posts := c.getPostData(query)
+	posts := models.GetPostData(query)
 	search := fmt.Sprintf("Found %d posts containing %s", len(posts), searchInp)
 	c.ViewArgs["pagen"] = &models.Pagination{int(math.Ceil(float64(len(posts)) / 8)) }
 	c.ViewArgs["pageNum"] = 1
 	return c.Render(search, posts)
-}
-
-func (c Post) getPostByURL(url string) *models.Post {
-	curPost := &models.Post{}
-	err := app.DB.Get(curPost,"SELECT * FROM posts WHERE friendly_url = ?", url)
-	if err != nil {
-		c.Log.Error("getPostByURL()", err.Error())
-		return nil
-	}
-	curPost.Format()
-	return curPost
-}
-
-func (c Post) getPostsByTag(tag string) []*models.Post {
-	query, err := app.DB.Query("SELECT * FROM `posts` WHERE FIND_IN_SET(?, `tags`)", tag)
-	if err != nil {
-		c.Log.Error("getPostsByTag()", err.Error())
-		return nil
-	}
-	return c.getPostData(query)
-}
-
-func (c Post) getPostByID(id int) *models.Post {
-	curPost := &models.Post{}
-	err := app.DB.Get(curPost,"SELECT * FROM posts WHERE id = ?", id)
-	if err != nil {
-		c.Log.Error("getPostByID()", err.Error())
-		return nil
-	}
-	curPost.Format()
-	return curPost
-}
-
-func (c Post) getPostData(query *sql.Rows) []*models.Post {
-	posts := make([]*models.Post, 0)
-	for query.Next() {
-		curPost := &models.Post{}
-		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
-			&curPost.Description, &curPost.URL, &curPost.Tags, &curPost.Banner, &curPost.Images,
-			&curPost.Date, &curPost.Updated); err != nil {
-			log.Printf("[!] Error scanning to post: %s", err.Error())
-		}
-		curPost.Format()
-		posts = append(posts, curPost)
-	}
-	return posts
 }

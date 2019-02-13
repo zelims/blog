@@ -1,29 +1,37 @@
-{{ set . "title" (strcat (strcat "View Post #" .postID) " Analytics") }}
+{{ set . "title" (strcat (strcat "View Post #" (itoa .postID)) " Analytics") }}
 {{ set . "active" "postanalytics" }}
 {{ template "templates/manage/header.html" . }}
 {{ template "templates/manage/navigation.html" . }}
 
 <div class="content">
     <h3>Post #{{ .postID }} Visitors</h3>
+    <small>{{ .postTitle }}</small>
     <hr>
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>Post ID</th>
-            <th>Title</th>
-            <th>Visitors</th>
-            <th>Posted</th>
-            <th>Modified</th>
+            <th>User ID</th>
+            <th>Visits</th>
+            <th>Last IP</th>
+            <th>Country</th>
+            <th>OS</th>
+            <th>Browser</th>
+            <th>Device</th>
+            <th>Last Seen</th>
+            <th>View</th>
         </tr>
         </thead>
         <tbody>
         {{ range .postvisitors }}
             <tr>
-                <td>{{ .ID }}</td>
-                <td>{{ .Title }}</td>
-                <td>{{ .Count }}</td>
-                <td>{{ .Date }}</td>
-                <td>{{ .Modified }}</td>
+                <td>{{ .UUID }}</td>
+                <td>{{ .Visits }}</td>
+                <td>{{ .IP }}</td>
+                <td>{{ .Country }}</td>
+                <td>{{ .OS }}</td>
+                <td>{{ .Browser }}</td>
+                <td>{{ .Device }}</td>
+                <td>{{ time_format .Time }}</td>
                 <td><a class="btn btn-primary w-100" href="{{ url "Analytics.User" .UUID }}">View</a></td>
             </tr>
         {{ end }}

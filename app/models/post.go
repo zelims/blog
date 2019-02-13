@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/zelims/blog/app"
 	"log"
@@ -10,7 +11,7 @@ import (
 )
 
 type Post struct {
-	ID					int
+	ID					int			`db:"id"`
 	Author				string
 	Title				string
 	Content				string
@@ -67,6 +68,52 @@ func Posts(offset int) ([]*Post, int) {
 	}
 	formatPosts(posts)
 	return posts, SizeOfAllPosts()
+}
+
+func GetPostByURL(url string) *Post {
+	curPost := &Post{}
+	err := app.DB.Get(curPost,"SELECT * FROM posts WHERE friendly_url = ?", url)
+	if err != nil {
+		log.Printf("GetPostByURL(%s): %s", url, err.Error())
+		return nil
+	}
+	curPost.Format()
+	return curPost
+}
+
+func GetPostsByTag(tag string) []*Post {
+	query, err := app.DB.Query("SELECT * FROM `posts` WHERE FIND_IN_SET(?, `tags`)", tag)
+	if err != nil {
+		log.Printf("GetPostsByTag(%s): %s", tag, err.Error())
+		return nil
+	}
+	return GetPostData(query)
+}
+
+func GetPostByID(id int) *Post {
+	curPost := &Post{}
+	err := app.DB.Get(curPost,"SELECT * FROM posts WHERE id = ?", id)
+	if err != nil {
+		log.Printf("GetPostByID(%d): %s", id, err.Error())
+		return nil
+	}
+	curPost.Format()
+	return curPost
+}
+
+func GetPostData(query *sql.Rows) []*Post {
+	posts := make([]*Post, 0)
+	for query.Next() {
+		curPost := &Post{}
+		if err := query.Scan(&curPost.ID, &curPost.Author, &curPost.Title, &curPost.Content,
+			&curPost.Description, &curPost.URL, &curPost.Tags, &curPost.Banner, &curPost.Images,
+			&curPost.Date, &curPost.Updated); err != nil {
+			log.Printf("[!] Error scanning to post: %s", err.Error())
+		}
+		curPost.Format()
+		posts = append(posts, curPost)
+	}
+	return posts
 }
 
 func formatPosts(posts []*Post) {

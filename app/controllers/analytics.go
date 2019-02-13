@@ -16,12 +16,16 @@ func (a Analytics) View() revel.Result {
 	return a.checkAuth("Manage/Analytics/view.html")
 }
 
-func (a Analytics) Post() revel.Result {
-	a.ViewArgs["postvisitors"] = models.PostsWithAnalytics()
+func (a Analytics) Post(title string) revel.Result {
+	post := models.GetPostByURL(title)
+	a.ViewArgs["postID"] = post.ID
+	a.ViewArgs["postTitle"] = post.Title
+	a.ViewArgs["postvisitors"] = models.AnalyticsByPost(title)
 	return a.checkAuth("Manage/Analytics/post.html")
 }
 
 func (a Analytics) Posts() revel.Result {
+	a.ViewArgs["posts"] = models.PostsWithAnalytics()
 	return a.checkAuth("Manage/Analytics/posts.html")
 }
 
