@@ -133,7 +133,7 @@ func AnalyticsByUUID(uuid string) (aData []AnalyticData) {
 }
 
 func AnalyticsByPost(title string) (aData []AnalyticData) {
-	err := app.DB.Select(&aData, "SELECT a.* FROM posts p JOIN analytics a ON REPLACE(a.page, \"/post/\", \"\") = ? GROUP BY a.uuid", title)
+	err := app.DB.Select(&aData, "SELECT a.*,COUNT(DISTINCT a.id) AS visits FROM posts p JOIN analytics a ON REPLACE(a.page, \"/post/\", \"\") = ? GROUP BY a.uuid", title)
 	if err != nil {
 		log.Printf("Could not get posts: %s", err.Error())
 		return nil
