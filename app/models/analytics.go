@@ -133,7 +133,7 @@ func AnalyticsByUUID(uuid string) (aData []AnalyticData) {
 }
 
 func AnalyticsByPost(title string) (aData []AnalyticData) {
-	err := app.DB.Select(&aData, "SELECT a.* FROM posts p JOIN analytics a ON a.page LIKE CONCAT('%', p.friendly_url, '%') GROUP BY a.uuid")
+	err := app.DB.Select(&aData, "SELECT a.* FROM posts p JOIN analytics a ON REPLACE(a.page, \"/post/\", \"\") = ? GROUP BY a.uuid", title)
 	if err != nil {
 		log.Printf("Could not get posts: %s", err.Error())
 		return nil
@@ -146,7 +146,7 @@ func PostsWithAnalytics() (posts []*AnalyticsPosts) {
 	SELECT * FROM posts p JOIN analytics a
 	ON a.page LIKE CONCAT('%', p.friendly_url, '%') GROUP BY p.id
 	 */
-	err := app.DB.Select(&posts, "SELECT p.*,COUNT(a.uuid) AS count FROM posts p JOIN analytics a ON a.page LIKE CONCAT('%', p.friendly_url, '%') GROUP BY p.id")
+	err := app.DB.Select(&posts, "SELECT p.*,COUNT(a.uuid) AS count FROM posts p JOIN analytics a ON REPLACE(a.page, \"/post/\", \"\") = p.friendly_url GROUP BY p.id ")
 	if err != nil {
 		log.Printf("Could not get posts: %s", err.Error())
 		return nil
