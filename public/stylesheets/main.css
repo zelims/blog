@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 html {
     height: 100vh;
 }
 body {
-    font-family: Roboto sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 0.95rem;
     display: flex;
     flex-direction: column;
@@ -403,8 +405,12 @@ ul a:focus {
 }
 
 i + span {
-    margin-left: 0.5rem;
+    margin-right: 0;
     padding-top: 0.1rem;
+}
+
+.page-link:hover {
+    cursor: pointer;
 }
 
 /* Footer */
