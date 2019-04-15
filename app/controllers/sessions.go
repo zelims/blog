@@ -75,7 +75,8 @@ func (c Sessions) SaveProfile() revel.Result {
 	if !c.Authenticated() {
 		return c.Redirect(routes.Sessions.Index())
 	}
-	_, err := app.DB.NamedExec(`UPDATE config SET name=:name,location=:loc,about=:about,github=:gh,twitter=:tw,instagram=:ig`,
+	_, err := app.DB.NamedExec(`UPDATE config SET name=:name,location=:loc,about=:about,github=:gh,twitter=:tw,`+
+			`instagram=:ig,linkedin=:li`,
 		map[string]interface{}{
 			"name": 		c.Params.Form.Get("user-name"),
 			"loc":	 		c.Params.Form.Get("user-location"),
@@ -83,6 +84,7 @@ func (c Sessions) SaveProfile() revel.Result {
 			"gh": 			c.Params.Form.Get("user-github"),
 			"tw":	 		c.Params.Form.Get("user-twitter"),
 			"ig": 			c.Params.Form.Get("user-instagram"),
+			"li": 			c.Params.Form.Get("user-linkedin"),
 		})
 	if err != nil {
 		c.Flash.Error(fmt.Sprintf("Could not update profile - %s", err.Error()))

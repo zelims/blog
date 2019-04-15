@@ -18,8 +18,8 @@ type App struct {
 }
 
 func init() {
-	// revel.InterceptFunc(models.TrackUser, revel.AFTER, &App{})
-	// revel.InterceptFunc(models.TrackUser, revel.AFTER, &Post{})
+	revel.InterceptFunc(models.TrackUser, revel.AFTER, &App{})
+	revel.InterceptFunc(models.TrackUser, revel.AFTER, &Post{})
 }
 
 func (c App) Index() revel.Result {

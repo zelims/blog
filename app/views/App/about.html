@@ -18,6 +18,9 @@
                         {{ if .profile.Github }}
                             <li><i class="fab fa-github"></i> <a href="https://github.com/{{ .profile.Github }}" target="_blank">{{ .profile.Github }}</a></li>
                         {{ end }}
+                        {{ if .profile.LinkedIn }}
+                            <li><i class="fab fa-linkedin"></i> <a href="https://linkedin.com/in/{{ .profile.LinkedIn }}" target="_blank">{{ .profile.LinkedIn }}</a></li>
+                        {{ end }}
                         {{ if .profile.Twitter }}
                             <li><i class="fab fa-twitter"></i> <a href="https://twitter.com/{{ .profile.Twitter }}" target="_blank">{{ .profile.Twitter }}</a></li>
                         {{ end }}

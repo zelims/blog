@@ -137,6 +137,34 @@ body {
         color: #fff; }
 
 /*====================================
+ Toast Notification
+ ====================================*/
+.toast {
+  z-index: 999;
+  width: 100%;
+  min-width: 350px !important; }
+  .toast .toast-header {
+    height: 40px; }
+    .toast .toast-header i + span {
+      padding-left: 0.5rem; }
+  .toast-success .toast-header {
+    background-color: #d4edda;
+    border-color: #c3e6cb; }
+  .toast-warning .toast-header {
+    background-color: #fff3cd;
+    border-color: #ffeeba; }
+  .toast-error .toast-header {
+    background-color: #f8d7da;
+    border-color: #f5c6cb; }
+  .toast.toast-none .toast-body {
+    background: rgba(225, 0, 225, 0.75); }
+
+.toast-wrapper {
+  position: fixed;
+  top: 20px;
+  right: 20px; }
+
+/*====================================
  Notify Card
  ====================================*/
 .card .card-header {

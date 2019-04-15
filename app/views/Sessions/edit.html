@@ -1,6 +1,6 @@
 {{ set . "title" "Edit Profile" }}
 {{ set . "active" "profile" }}
-{{ append . "moreStyles" "stylesheets/simplemde.min.css" }}
+{{ append . "moreStyles" "stylesheets/simplemde/simplemde.min.css" }}
 {{ template "templates/manage/header.html" . }}
 {{ template "templates/manage/navigation.html" . }}
 
@@ -27,6 +27,15 @@
                     <span class="input-group-text" id="github-at">@</span>
                 </div>
                 <input type="text" class="form-control" name="user-github" placeholder="username" aria-label="username" aria-describedby="github-at" value="{{ .profile.Github }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="user-linkedin">LinkedIn</label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="linkedin-at">@</span>
+                </div>
+                <input type="text" class="form-control" name="user-linkedin" placeholder="username" aria-label="username" aria-describedby="linkedin-at" value="{{ .profile.LinkedIn }}">
             </div>
         </div>
         <div class="form-group">

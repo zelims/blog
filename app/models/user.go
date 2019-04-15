@@ -13,4 +13,5 @@ type UserProfile struct {
 	Github		string
 	Twitter		string
 	Instagram	string
+	LinkedIn	string
 }
