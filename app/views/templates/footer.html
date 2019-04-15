@@ -11,8 +11,8 @@
 
   <script src="/public/scripts/custom.js"></script>
 
-  {{range .moreScripts}}
-      <script src="/public/scripts/{{.}}" type="text/javascript" charset="utf-8"></script>
+  {{range .scripts}}
+      <script src="{{.}}" type="text/javascript" charset="utf-8"></script>
   {{end}}
   {{ if eq .active "home" }}
       <script>

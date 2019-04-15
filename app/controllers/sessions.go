@@ -2,14 +2,15 @@ package controllers
 
 import (
 	"crypto/sha256"
+	"database/sql"
 	"encoding/base64"
 	"fmt"
 	"github.com/revel/revel"
-	"github.com/zelims/blog/app"
+	"github.com/zelims/blog/app/database"
 	"github.com/zelims/blog/app/models"
 	"github.com/zelims/blog/app/routes"
 	"log"
-	"strings"
+	"net/http"
 )
 
 type Sessions struct {
@@ -41,7 +42,7 @@ func (c Sessions) currentUser() *models.User{
 
 func (c Sessions) user(username string) *models.User {
 	var user models.User
-	query := app.DB.QueryRow("SELECT ID,username FROM `users` WHERE username=?", username)
+	query := database.Handle.QueryRow("SELECT ID,username FROM `users` WHERE username=?", username)
 	err := query.Scan(&user.ID, &user.Username)
 	if err != nil {
 		c.Logout()
@@ -52,10 +53,12 @@ func (c Sessions) user(username string) *models.User {
 
 func (c Sessions) userLogin(username, password string) *models.User{
 	var user models.User
-	query := app.DB.QueryRow("SELECT ID,username FROM `users` WHERE username=? AND password=?", username, password)
+	query := database.Handle.QueryRow("SELECT ID,username FROM `users` WHERE username=? AND password=?", username, password)
 	err := query.Scan(&user.ID, &user.Username)
 	if err != nil {
-		log.Printf("Could not scan to user: %s", err.Error())
+		if err != sql.ErrNoRows {
+			log.Printf("Could not scan to user: %s", err.Error())
+		}
 		return nil
 	}
 	return &user
@@ -63,7 +66,7 @@ func (c Sessions) userLogin(username, password string) *models.User{
 
 func (c Sessions) Edit() revel.Result {
 	var profile models.UserProfile
-	err := app.DB.Get(&profile, "SELECT * FROM config")
+	err := database.Handle.Get(&profile, "SELECT * FROM config")
 	if err != nil {
 		log.Printf("Couldn't get about data: %s", err.Error())
 	}
@@ -75,7 +78,7 @@ func (c Sessions) SaveProfile() revel.Result {
 	if !c.Authenticated() {
 		return c.Redirect(routes.Sessions.Index())
 	}
-	_, err := app.DB.NamedExec(`UPDATE config SET name=:name,location=:loc,about=:about,github=:gh,twitter=:tw,`+
+	_, err := database.Handle.NamedExec(`UPDATE config SET name=:name,location=:loc,about=:about,github=:gh,twitter=:tw,`+
 			`instagram=:ig,linkedin=:li`,
 		map[string]interface{}{
 			"name": 		c.Params.Form.Get("user-name"),
@@ -95,6 +98,10 @@ func (c Sessions) SaveProfile() revel.Result {
 }
 
 func (c Sessions) Login(username string, password string, rememberMe bool) revel.Result {
+	if !models.ValidateRecaptcha(c.Request.In.GetRaw().(*http.Request)) {
+		c.Flash.Error("Recaptcha Failed")
+		return c.Redirect(routes.Sessions.Index())
+	}
 	user := c.userLogin(username, encryptPwd(password))
 	if user != nil {
 		c.Session["user"] = username
@@ -103,7 +110,7 @@ func (c Sessions) Login(username string, password string, rememberMe bool) revel
 		} else {
 			c.Session.SetDefaultExpiration()
 		}
-		c.Flash.Success("Welcome " + strings.Title(username) + "!")
+		c.Flash.Success("Welcome " + username + "!")
 		return c.Redirect(routes.Manage.Index())
 	}
 	c.Flash.Out["username"] = username

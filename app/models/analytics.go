@@ -6,7 +6,7 @@ import (
 	"github.com/oschwald/geoip2-golang"
 	"github.com/revel/revel"
 	"github.com/satori/go.uuid"
-	"github.com/zelims/blog/app"
+	"github.com/zelims/blog/app/database"
 	"log"
 	"net"
 	"strings"
@@ -63,7 +63,7 @@ func TrackUser(c *revel.Controller) revel.Result {
 	browser := strings.Title(strings.Split(strings.ToLower(ua.Browser.Name.String()), "browser")[1])
 	device := strings.Title(strings.Split(strings.ToLower(ua.DeviceType.String()), "device")[1])
 
-	_, err := app.DB.NamedExec(`INSERT INTO analytics(ID,uuid,page,ip_address,country,os,browser,device,time)` +
+	_, err := database.Handle.NamedExec(`INSERT INTO analytics(ID,uuid,page,ip_address,country,os,browser,device,time)` +
 		` VALUES(:id,:uuid,:page,:ip,:country,:os,:browser,:device,:time)`,
 		map[string]interface{}{
 			"id":		nil,
@@ -100,7 +100,7 @@ func getISOCodeFromIP(ip string) string {
 }
 
 func GetUniqueVisitors() (count int) {
-	err := app.DB.Get(&count, "SELECT COUNT(DISTINCT(uuid)) AS count FROM analytics")
+	err := database.Handle.Get(&count, "SELECT COUNT(DISTINCT(uuid)) AS count FROM analytics")
 	if err != nil {
 		log.Printf("Could not get unique users: %s", err.Error())
 		return -1
@@ -109,7 +109,7 @@ func GetUniqueVisitors() (count int) {
 }
 
 func GetCountryAnalytics() (countryAnalytics []CountryAnalytics) {
-	err := app.DB.Select(&countryAnalytics, `SELECT country,COUNT(*) AS count FROM ( SELECT uuid,country FROM analytics GROUP BY uuid ) t GROUP BY country`)
+	err := database.Handle.Select(&countryAnalytics, `SELECT country,COUNT(*) AS count FROM ( SELECT uuid,country FROM analytics GROUP BY uuid ) t GROUP BY country`)
 	if err != nil {
 		log.Printf("Failed to get country analytics: %s", err.Error())
 	}
@@ -117,7 +117,7 @@ func GetCountryAnalytics() (countryAnalytics []CountryAnalytics) {
 }
 
 func GetAnalyticData() (aData []AnalyticData) {
-	err := app.DB.Select(&aData, "SELECT *,COUNT(*) AS visits FROM analytics GROUP BY uuid")
+	err := database.Handle.Select(&aData, "SELECT *,COUNT(*) AS visits FROM analytics GROUP BY uuid")
 	if err != nil {
 		log.Printf("Could not get analytics: %s", err.Error())
 	}
@@ -125,7 +125,7 @@ func GetAnalyticData() (aData []AnalyticData) {
 }
 
 func AnalyticsByUUID(uuid string) (aData []AnalyticData) {
-	err := app.DB.Select(&aData, "SELECT * FROM analytics WHERE uuid = ?", uuid)
+	err := database.Handle.Select(&aData, "SELECT * FROM analytics WHERE uuid = ?", uuid)
 	if err != nil {
 		log.Printf("Could not get analytics for user [%s]: %s", uuid, err.Error())
 	}
@@ -133,7 +133,7 @@ func AnalyticsByUUID(uuid string) (aData []AnalyticData) {
 }
 
 func AnalyticsByPost(title string) (aData []AnalyticData) {
-	err := app.DB.Select(&aData, "SELECT a.*,COUNT(DISTINCT a.id) AS visits FROM posts p JOIN analytics a ON REPLACE(a.page, \"/post/\", \"\") = ? GROUP BY a.uuid", title)
+	err := database.Handle.Select(&aData, "SELECT a.*,COUNT(DISTINCT a.id) AS visits FROM posts p JOIN analytics a ON REPLACE(a.page, \"/post/\", \"\") = ? GROUP BY a.uuid", title)
 	if err != nil {
 		log.Printf("Could not get posts: %s", err.Error())
 		return nil
@@ -146,7 +146,7 @@ func PostsWithAnalytics() (posts []*AnalyticsPosts) {
 	SELECT * FROM posts p JOIN analytics a
 	ON a.page LIKE CONCAT('%', p.friendly_url, '%') GROUP BY p.id
 	 */
-	err := app.DB.Select(&posts, "SELECT p.*,COUNT(a.uuid) AS count FROM posts p JOIN analytics a ON REPLACE(a.page, \"/post/\", \"\") = p.friendly_url GROUP BY p.id ")
+	err := database.Handle.Select(&posts, "SELECT p.*,COUNT(a.uuid) AS count FROM posts p JOIN analytics a ON REPLACE(a.page, \"/post/\", \"\") = p.friendly_url GROUP BY p.id ")
 	if err != nil {
 		log.Printf("Could not get posts: %s", err.Error())
 		return nil

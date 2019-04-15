@@ -3,7 +3,7 @@ package models
 import (
 	"database/sql"
 	"fmt"
-	"github.com/zelims/blog/app"
+	"github.com/zelims/blog/app/database"
 	"log"
 	"strconv"
 	"strings"
@@ -37,7 +37,7 @@ type FileInfo struct {
 
 func SizeOfAllPosts() int {
 	size := 0
-	query := app.DB.QueryRow("SELECT COUNT(*) FROM posts")
+	query := database.Handle.QueryRow("SELECT COUNT(*) FROM posts")
 	if err := query.Scan(&size); err != nil {
 		log.Printf("Failed to count rows: %s", err.Error())
 		return -1
@@ -46,13 +46,13 @@ func SizeOfAllPosts() int {
 }
 
 func PostByID(id int) (post Post, err error) {
-	err = app.DB.Get(&post, "SELECT * FROM posts WHERE id = ?", id)
+	err = database.Handle.Get(&post, "SELECT * FROM posts WHERE id = ?", id)
 	return
 }
 
 func AllPosts() []*Post {
 	allPosts := make([]*Post, 0)
-	err := app.DB.Select(&allPosts,"SELECT * FROM posts ORDER BY date DESC")
+	err := database.Handle.Select(&allPosts,"SELECT * FROM posts ORDER BY date DESC")
 	if err != nil {
 		log.Printf("AllPosts(): %s", err.Error())
 	}
@@ -62,7 +62,7 @@ func AllPosts() []*Post {
 
 func Posts(offset int) ([]*Post, int) {
 	posts := make([]*Post, 0)
-	err := app.DB.Select(&posts,"SELECT * FROM posts ORDER BY date DESC LIMIT ?, 8", (offset - 1) * 8)
+	err := database.Handle.Select(&posts,"SELECT * FROM posts ORDER BY date DESC LIMIT ?, 8", (offset - 1) * 8)
 	if err != nil {
 		log.Printf("Posts(%d): %s", offset, err.Error())
 	}
@@ -72,7 +72,7 @@ func Posts(offset int) ([]*Post, int) {
 
 func GetPostByURL(url string) *Post {
 	curPost := &Post{}
-	err := app.DB.Get(curPost,"SELECT * FROM posts WHERE friendly_url = ?", url)
+	err := database.Handle.Get(curPost,"SELECT * FROM posts WHERE friendly_url = ?", url)
 	if err != nil {
 		log.Printf("GetPostByURL(%s): %s", url, err.Error())
 		return nil
@@ -82,7 +82,7 @@ func GetPostByURL(url string) *Post {
 }
 
 func GetPostsByTag(tag string) []*Post {
-	query, err := app.DB.Query("SELECT * FROM `posts` WHERE FIND_IN_SET(?, `tags`)", tag)
+	query, err := database.Handle.Query("SELECT * FROM `posts` WHERE FIND_IN_SET(?, `tags`)", tag)
 	if err != nil {
 		log.Printf("GetPostsByTag(%s): %s", tag, err.Error())
 		return nil
@@ -92,7 +92,7 @@ func GetPostsByTag(tag string) []*Post {
 
 func GetPostByID(id int) *Post {
 	curPost := &Post{}
-	err := app.DB.Get(curPost,"SELECT * FROM posts WHERE id = ?", id)
+	err := database.Handle.Get(curPost,"SELECT * FROM posts WHERE id = ?", id)
 	if err != nil {
 		log.Printf("GetPostByID(%d): %s", id, err.Error())
 		return nil

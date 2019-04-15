@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/revel/revel"
-	"github.com/zelims/blog/app"
+	"github.com/zelims/blog/app/database"
 	"github.com/zelims/blog/app/models"
 	"math"
 )
@@ -35,7 +35,7 @@ func (c Post) Keywords(tag string) revel.Result {
 func (c Post) Search() revel.Result {
 	searchInp := c.Params.Get("postSearch")
 	searchQuery := "%" + searchInp + "%"
-	query, err := app.DB.Query("SELECT * FROM `posts` WHERE UPPER(content) " +
+	query, err := database.Handle.Query("SELECT * FROM `posts` WHERE UPPER(content) " +
 		"LIKE UPPER(?) OR UPPER(title) LIKE UPPER(?) OR UPPER(description) LIKE UPPER(?) OR FIND_IN_SET(?, `tags`)",
 		searchQuery, searchQuery, searchQuery, searchInp)
 	if err != nil {

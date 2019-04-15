@@ -4,7 +4,7 @@ import (
 	"github.com/google/go-github/github"
 	"github.com/revel/revel"
 	"github.com/revel/revel/cache"
-	"github.com/zelims/blog/app"
+	"github.com/zelims/blog/app/database"
 	"github.com/zelims/blog/app/models"
 	"html/template"
 	"log"
@@ -47,7 +47,7 @@ func (c App) PagePosts() revel.Result {
 func (c App) About() revel.Result {
 	var profile models.UserProfile
 	if err := cache.Get("profile", &profile); err != nil {
-		err := app.DB.Get(&profile, "SELECT * FROM config")
+		err := database.Handle.Get(&profile, "SELECT * FROM config")
 		if err != nil {
 			log.Printf("Couldn't get about data: %s", err.Error())
 		}
@@ -73,7 +73,7 @@ func (c App) Repositories() revel.Result {
 func (c App) GitHub() revel.Result {
 	var githubUsername string
 	if err := cache.Get("githubUsername", &githubUsername); err != nil {
-		err := app.DB.Get(&githubUsername, "SELECT github FROM config")
+		err := database.Handle.Get(&githubUsername, "SELECT github FROM config")
 		if err != nil {
 			log.Printf("[!] Could not get Github username (%s)", err.Error())
 		}

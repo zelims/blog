@@ -2,13 +2,12 @@ package app
 
 import (
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/go-github/github"
-	"github.com/jmoiron/sqlx"
 	"github.com/revel/revel"
 	"github.com/russross/blackfriday"
+	"github.com/zelims/blog/app/database"
+	"github.com/zelims/blog/app/utils"
 	"html/template"
-	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -22,20 +21,6 @@ var (
 	// BuildTime revel app build-time (ldflags)
 	BuildTime string
 )
-
-var DB *sqlx.DB
-
-func initDB() {
-	driver := revel.Config.StringDefault("db.driver", "mysql")
-	connectString := revel.Config.StringDefault("db.connect", "root:@(localhost:3306)/blog")
-
-	db, err := sqlx.Connect(driver, connectString)
-	if err != nil {
-		log.Fatal("[!] DB Err: ", err)
-	}
-
-	DB = db
-}
 
 func setupTemplateFuncs() {
 	revel.TemplateFuncs["strcat"] = func(strs ...string) string {
@@ -131,7 +116,8 @@ func init() {
 	// revel.OnAppStart(InitDB)
 	// revel.OnAppStart(FillCache)
 
-	revel.OnAppStart(initDB)
+	revel.OnAppStart(database.Initialize)
+	revel.OnAppStart(utils.Initialize)
 	revel.OnAppStart(setupTemplateFuncs)
 }
 

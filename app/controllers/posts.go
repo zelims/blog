@@ -7,7 +7,7 @@ import (
 	"github.com/kataras/iris/core/errors"
 	"github.com/olahol/go-imageupload"
 	"github.com/revel/revel"
-	"github.com/zelims/blog/app"
+	"github.com/zelims/blog/app/database"
 	"github.com/zelims/blog/app/models"
 	"github.com/zelims/blog/app/routes"
 	"log"
@@ -43,7 +43,7 @@ func (p Posts) Edit(id int) revel.Result {
 
 func checkURLExists(url string) int {
 	count := 0
-	err := app.DB.QueryRow("SELECT COUNT(*) FROM posts WHERE friendly_url LIKE ?", url).Scan(&count)
+	err := database.Handle.QueryRow("SELECT COUNT(*) FROM posts WHERE friendly_url LIKE ?", url).Scan(&count)
 	if err != nil {
 		log.Printf("Could not query row %s", err.Error())
 		return -1
@@ -62,7 +62,7 @@ func (p Posts) Create() revel.Result {
 		return p.Redirect(routes.Posts.View())
 	}
 
-	_, err = app.DB.NamedExec(`INSERT INTO posts (ID, author, title, content, description, friendly_url, tags, banner, images, date)` +
+	_, err = database.Handle.NamedExec(`INSERT INTO posts (ID, author, title, content, description, friendly_url, tags, banner, images, date)` +
 		` VALUES (:id,:author,:title,:content,:desc,:url,:tags,:banner,:images,:date)`,
 		map[string]interface{}{
 			"id":          	nil,
@@ -123,7 +123,7 @@ func (p Posts) Modify(id int) revel.Result {
 		queryData["banner"] = postValues["banner"]
 	}
 
-	_, err = app.DB.NamedExec(`UPDATE posts SET `+query+` WHERE id=:id`, queryData)
+	_, err = database.Handle.NamedExec(`UPDATE posts SET `+query+` WHERE id=:id`, queryData)
 
 	if err != nil {
 		log.Printf("Could not update post %d: %s", id, err.Error())

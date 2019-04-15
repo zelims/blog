@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/google/go-github/github"
-	"github.com/zelims/blog/app"
+	"github.com/zelims/blog/app/database"
 	"golang.org/x/oauth2"
 	"html/template"
 	"log"
@@ -22,7 +22,7 @@ type repoData []*github.Repository
 
 func GithubAuthentication() {
 	githubContext = context.Background()
-	row := app.DB.QueryRow("SELECT `github` FROM tokens")
+	row := database.Handle.QueryRow("SELECT `github` FROM tokens")
 	var token string
 	err := row.Scan(&token)
 	if err != nil {
