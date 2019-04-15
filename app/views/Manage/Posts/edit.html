@@ -1,6 +1,6 @@
 {{ set . "title" (strcat "Edit Post - " .post.Title) }}
 {{ set . "active" "editpost" }}
-{{ append . "moreStyles" "stylesheets/simplemde.min.css" }}
+{{ append . "moreStyles" "stylesheets/simplemde/simplemde.min.css" }}
 {{ template "templates/manage/header.html" . }}
 {{ template "templates/manage/navigation.html" . }}
 
@@ -15,5 +15,5 @@
         <div class="clearfix"></div>
     </form>
 </div>
-{{ append . "moreScripts" "scripts/simplemde.min.js" }}
+{{ append . "moreScripts" "scripts/simplemde/simplemde.min.js" }}
 {{ template "templates/manage/footer.html" . }}
