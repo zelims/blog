@@ -1,6 +1,6 @@
 {{ set . "title" "Manage" }}
 {{ set . "active" "dashboard" }}
-{{ append . "moreStyles" "vendor/jvectormap/jquery-jvectormap-2.0.3.css" }}
+{{ append . "styles" "/public/vendor/jvectormap/jquery-jvectormap-2.0.3.css" }}
 {{ template "templates/manage/header.html" . }}
 {{ template "templates/manage/navigation.html" . }}
 
@@ -36,6 +36,6 @@
     <div id="visitor-map"></div>
 </div>
 {{/* TODO: Map showing visitors*/}}
-{{ append . "scripts" "/public/scripts/vendor/jvectormap/jquery-jvectormap-2.0.3.min.js" }}
-{{ append . "scripts" "/public/scripts/vendor/jvectormap/maps/world.js" }}
+{{ append . "scripts" "/public/vendor/jvectormap/jquery-jvectormap-2.0.3.min.js" }}
+{{ append . "scripts" "/public/vendor/jvectormap/maps/world.js" }}
 {{ template "templates/manage/footer.html" . }}
