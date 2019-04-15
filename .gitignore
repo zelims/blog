@@ -5,3 +5,4 @@ routes/
 build/
 public/images/post*
 *.mmdb
+.sass-cache/

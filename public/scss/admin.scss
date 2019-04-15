@@ -1,0 +1,241 @@
+body {
+  flex-direction: unset;
+}
+.content-wrapper {
+  width: 87%;
+}
+.content {
+  margin: 2.75rem;
+  background: #fff;
+  padding: 1.75rem 2.25rem;
+}
+
+.navbar {
+  height: 60px;
+}
+.sidebar {
+  width: 13%;
+  background: #2a2a2a;
+  font-size: 0.9rem;
+  .sidebar-title {
+    height: 60px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(248, 249, 250, 0.3);
+
+    span {
+      color: #fff;
+      font-size: 1.5rem;
+      line-height: 60px;
+    }
+  }
+  .nav {
+    width: 100%;
+
+    .nav-item {
+      display: block;
+      width: 100%;
+      height: 40px;
+      line-height: 22px;
+      padding: 0 0.5rem;
+
+      .nav-link {
+        color: #bbb;
+
+        i {
+          float: right;
+          line-height: 22px;
+        }
+      }
+
+      &:not(.nav-category) .nav-link:hover, &.active .nav-link {
+        color: #fff;
+        background: #444;
+      }
+
+      &.nav-category {
+        cursor: default;
+        text-transform: uppercase;
+        .nav-link {
+          color: #bf4f50;
+        }
+        &:not(:first-child) {
+          margin-top: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+.CodeMirror {
+  height: 425px!important;
+}
+
+/*====================================
+ Notification Panels
+ ====================================*/
+.notification-panel {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border-radius: 4px;
+  color: #FFF;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  cursor: default;
+
+  .icon {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    min-width: 85px;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px 0 0 4px;
+    font-size: 2.5rem;
+  }
+  .info {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    padding: 0 20px;
+    -ms-flex-item-align: center;
+    align-self: center;
+
+    h4 {
+      text-transform: uppercase;
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    p {
+      margin: 0;
+      font-size: 16px;
+    }
+  }
+
+  &.default {
+    background-color: #919096;
+    &.colored-icon {
+      background-color: #fff;
+      color: #2a2a2a;
+      .icon {
+        background-color: #c1c1c1;
+        color: #fff;
+      }
+    }
+  }
+  &.good {
+    background-color: #009688;
+
+    &.colored-icon {
+      background-color: #fff;
+      color: #2a2a2a;
+
+      .icon {
+        background-color: #009688;
+        color: #fff;
+      }
+    }
+  }
+
+  &.info {
+    background-color: #3e8dc3;
+
+    &.colored-icon {
+      background-color: #fff;
+      color: #2a2a2a;
+
+      .icon {
+        background-color: #3e8dc3;
+        color: #fff;
+      }
+    }
+  }
+
+  &.warning {
+    background-color: #ffc107;
+
+    &.colored-icon {
+      background-color: #fff;
+      color: #2a2a2a;
+
+      .icon {
+        background-color: #ffc107;
+        color: #fff;
+      }
+    }
+  }
+
+  &.error {
+    background-color: #dc3545;
+
+    &.colored-icon {
+      background-color: #fff;
+      color: #2a2a2a;
+
+      .icon {
+        background-color: #dc3545;
+        color: #fff;
+      }
+    }
+  }
+}
+
+/*====================================
+ Notify Card
+ ====================================*/
+.card {
+
+  .card-header {
+    font-size: 1.35rem;
+  }
+  .list-group {
+    font-size: 1rem;
+
+    .list-group-item span.badge {
+      float: right;
+      line-height: 1.15rem;
+      color: #aaa;
+      text-align: right;
+      /* width: 75px;*/
+    }
+  }
+  .card-header-section {
+    border-bottom: 1px solid #bbb;
+    padding-bottom: 0.25rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/*====================================
+ Visitors Map
+ ====================================*/
+#visitor-map {
+  height: 75vh;
+
+  .jvectormap-container {
+    width: 90%;
+    padding: 2rem 0;
+    margin: 0 auto;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.post-banner-thumbnail {
+  width: 125px;
+  height: 125px;
+  display: block;
+  margin-bottom: 0.75rem;
+}
