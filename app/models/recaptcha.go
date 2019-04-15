@@ -7,7 +7,7 @@ import (
 
 var captcha recaptcha.R
 
-const secret = ""
+const secret = "6LfMMJ4UAAAAABMBTYd_oiV2zUKqZBJ30daEe3zF"
 
 func InitializeRecaptcha() {
 	captcha = recaptcha.R{ Secret: secret }

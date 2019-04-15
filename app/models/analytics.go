@@ -47,7 +47,7 @@ func TrackUser(c *revel.Controller) revel.Result {
 		c.Session["trackID"] = u.String()
 	}
 	request := c.Request
-	ipAddress := strings.Split(request.RemoteAddr, ":")[0]
+	ipAddress := strings.Split(request.Header.Get("X-Forwarded-For"), ":")[0]
 	if ipAddress == "127.0.0.1" || ipAddress == "localhost" {
 		//return nil
 	}

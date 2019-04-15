@@ -11,7 +11,8 @@ var Handle *sqlx.DB
 
 func Initialize() {
 	driver := revel.Config.StringDefault("db.driver", "mysql")
-	connectString := revel.Config.StringDefault("db.connect", "root:@(localhost:3306)/blog")
+	connectString := revel.Config.StringDefault("db.connect",
+		"root:@(localhost:3306)/blog")
 
 	db, err := sqlx.Connect(driver, connectString)
 	if err != nil {
