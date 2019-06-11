@@ -37,6 +37,9 @@ type AnalyticsPosts struct {
 }
 
 func TrackUser(c *revel.Controller) revel.Result {
+	if c.Request.Header.Get("REQ_TYPE") == "SRV_CALL" {
+		return nil
+	}
 	trackID := c.Session["trackID"]
 	if trackID == nil {
 		u, err := uuid.NewV4()

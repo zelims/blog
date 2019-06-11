@@ -34,6 +34,7 @@ func (c Post) Keywords(tag string) revel.Result {
 
 func (c Post) Search() revel.Result {
 	searchInp := c.Params.Get("postSearch")
+
 	searchQuery := "%" + searchInp + "%"
 	query, err := database.Handle.Query("SELECT * FROM `posts` WHERE UPPER(content) " +
 		"LIKE UPPER(?) OR UPPER(title) LIKE UPPER(?) OR UPPER(description) LIKE UPPER(?) OR FIND_IN_SET(?, `tags`)",

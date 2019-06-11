@@ -21,6 +21,30 @@ $('li#prevPage a').click(function(e) {
     switchPage(prevPage);
 });
 
+$(function() {
+    if($("#postSearch")) {
+        let searchTimeout = null;
+        $("#postSearch").on('keyup', function () {
+            $("#postList").html('<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>');
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                $.ajax({
+                    type: 'POST',
+                    url: "/search",
+                    headers: { 'REQ_TYPE': "SRV_CALL" },
+                    data: $("#searchForm").serialize(),
+                    success: function (data) {
+                        $("#postList").html(data);
+                    },
+                    failure: function () {
+                        $("#postList").html("Cannot find posts for " + this.val())
+                    }
+                });
+            }, 500);
+        });
+    }
+});
+
 function getPageCount() {
     return $('#postPageCount').val();
 }

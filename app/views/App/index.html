@@ -7,7 +7,7 @@
   <h3 class="title-border">Latest Posts</h3>
   <div class="row mb-3">
     <div class="col-12">
-      <form id="search" method="POST" action="/search">
+      <form id="searchForm" method="POST" action="/search">
         <label class="sr-only" for="postSearch">Search</label>
         <div class="input-group mb-2">
           <div class="input-group-prepend">
@@ -18,7 +18,9 @@
       </form>
     </div>
   </div>
-  {{ template "templates/posts.html" . }}
+  <div id="postList">
+    {{ template "templates/posts.html" . }}
+  </div>
 </div>
 
 {{template "templates/footer.html" .}}
