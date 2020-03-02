@@ -2,12 +2,13 @@ package models
 
 import (
 	"github.com/haisum/recaptcha"
+	"github.com/revel/revel"
 	"net/http"
 )
 
 var captcha recaptcha.R
 
-const secret = "6LfMMJ4UAAAAABMBTYd_oiV2zUKqZBJ30daEe3zF"
+var secret = revel.Config.StringDefault("recaptcha.secret", "")
 
 func InitializeRecaptcha() {
 	captcha = recaptcha.R{ Secret: secret }
